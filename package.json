@@ -1,0 +1,51 @@
+{
+  "name": "improve-quality",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "repository": "git@github.com:msuzuna/improve-quality.git",
+  "author": "msuzuna <suzuna.matsuo@nijibox.co.jp>",
+  "license": "MIT",
+  "devDependencies": {
+    "@eslint/js": "^9.0.0",
+    "autoprefixer": "^10.4.19",
+    "browser-sync": "^3.0.2",
+    "cpx": "^1.5.0",
+    "eslint": "^9.0.0",
+    "globals": "^15.0.0",
+    "npm-run-all": "^4.1.5",
+    "postcss": "8",
+    "postcss-cli": "^11.0.0",
+    "postcss-extend-rule": "^4.0.0",
+    "postcss-import": "^16.1.0",
+    "postcss-mixins": "^10.0.0",
+    "postcss-nested": "^6.0.1",
+    "prettier": "^3.2.5",
+    "rimraf": "^5.0.5",
+    "stylelint": "^16.3.1",
+    "stylelint-config-recess-order": "^5.0.0",
+    "stylelint-config-standard": "^36.0.0",
+    "stylelint-prettier": "^5.0.0",
+    "watch": "^1.0.2"
+  },
+  "browserslist": [
+    "last 2 versions",
+    "> 1% in JP"
+  ],
+  "scripts": {
+    "html/plain": "cpx 'src/index.html' 'dist/'",
+    "html": "npm-run-all html/plain",
+    "css/postcss/autoprefix": "postcss src/css/style.css -o dist/style.css",
+    "css": "npm-run-all css/postcss/autoprefix",
+    "clean/js": "rimraf dist/js && mkdir -p dist/js",
+    "js/plain": "cpx 'src/js/**/*.js' 'dist/js/'",
+    "js": "yarn run clean/js && npm-run-all -s js/plain",
+    "watch/html": "watch 'yarn run html' ./src/",
+    "watch/css": "watch 'yarn run css' ./src/",
+    "watch/js": "watch 'yarn run js' ./src/js",
+    "watch/server": "browser-sync start --server dist --files 'dist'",
+    "dev": "yarn run-p watch/html watch/css watch/js watch/server",
+    "build": "yarn run html && yarn run css && yarn run js"
+  },
+  "packageManager": "yarn@4.1.1"
+}

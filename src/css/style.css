@@ -1,0 +1,6 @@
+@import "./libs/reset.css";
+@import "./module/test.css";
+
+body {
+  display: flex;
+}
