@@ -47,5 +47,8 @@
     "dev": "yarn run-p watch/html watch/css watch/js watch/server",
     "build": "yarn run html && yarn run css && yarn run js"
   },
-  "packageManager": "yarn@4.1.1"
+  "packageManager": "yarn@4.1.1",
+  "dependencies": {
+    "firebase": "^10.11.0"
+  }
 }
