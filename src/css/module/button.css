@@ -1,0 +1,31 @@
+.button {
+  padding: 8px 16px;
+  border: 1px solid var(--color-main);
+  border-radius: 6px;
+
+  &:hover,
+  &:focus {
+    background-color: var(--color-primary-transparent);
+  }
+}
+
+.button.is-active {
+  color: var(--color-white);
+  pointer-events: none;
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.button-submit {
+  padding: 8px 16px;
+  color: var(--color-white);
+  background-color: var(--color-accent);
+  border: 1px solid var(--color-accent);
+  border-radius: 6px;
+
+  &:hover,
+  &:focus {
+    background-color: var(--color-accent-dark);
+    border-color: var(--color-accent-dark);
+  }
+}
