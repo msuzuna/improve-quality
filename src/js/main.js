@@ -1,1 +1,3 @@
-console.log("test0");
+import { weather } from "./modules/weather.js";
+
+weather();
