@@ -1,0 +1,12 @@
+.section {
+  padding: 20px;
+}
+
+.section-inner {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.section-contents {
+  margin-top: 20px;
+}
