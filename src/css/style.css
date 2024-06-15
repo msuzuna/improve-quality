@@ -1,6 +1,4 @@
-@import "./libs/reset.css";
-@import "./module/test.css";
-
-body {
-  display: flex;
-}
+@import url("./libs/reset.css");
+@import url("./module/variables.css");
+@import url("./module/foundation.css");
+@import url("./module/button.css");
