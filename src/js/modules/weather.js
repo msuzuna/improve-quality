@@ -67,9 +67,47 @@ export const weather = async () => {
   };
 
   /**
+   *
+   * @param {{key: string, description: string, list: Array<string>}} regionData
+   * @param {{key: string, description: string, prefectureList: Array<{name: string, ja:string, region: string}>}} prefectureData
+   */
+  const updatePrefectureList = (regionData, prefectureData) => {
+    const { key: regionKey } = regionData;
+    const { prefectureList } = prefectureData;
+    /**
+     * @type {NodeListOf<HTMLInputElement>}
+     */
+    const regionInputs = document.getElementsByName(regionKey);
+
+    /**
+     * 地域に合致する都道府県の一覧を返す関数
+     * @function
+     * @param {string} regionName
+     * @param {Array<{name: string, ja:string, region: string}>} prefectureList
+     * @returns {Array<string>}
+     */
+    const getMatchList = (regionName, prefectureList) => {
+      const matchList = prefectureList
+        .filter((prefecture) => prefecture.region === regionName)
+        .map((item) => item.ja);
+      return matchList;
+    };
+
+    regionInputs.forEach((input) => {
+      input.addEventListener("change", (event) => {
+        const regionName = event.target.value;
+        const list = getMatchList(regionName, prefectureList);
+        prefectureData.list = list;
+        createSelectBlock(prefectureData);
+      });
+    });
+  };
+
+  /**
    * @type {Object} 地域情報が格納されたオブジェクト
    */
   const areaData = await fetchCityData();
-  const { region } = areaData;
+  const { region, prefecture } = areaData;
   createSelectBlock(region);
+  updatePrefectureList(region, prefecture);
 };
