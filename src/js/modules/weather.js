@@ -41,9 +41,10 @@ export const weather = async () => {
     const p = document.createElement("p");
     const ul = document.createElement("ul");
     div.classList.add("section-inner");
+    div.setAttribute("data-weather-block", key);
     p.innerHTML = description;
     ul.classList.add("button-list");
-    ul.setAttribute("data-weather-area", key);
+    ul.setAttribute("data-weather-list", key);
     div.appendChild(p);
     div.appendChild(ul);
     weatherBlockElement.appendChild(div);
@@ -80,6 +81,17 @@ export const weather = async () => {
     const regionInputs = document.getElementsByName(regionKey);
 
     /**
+     * 都道府県ブロックを削除する関数
+     * @function
+     * @returns {void}
+     */
+    const deletePrefectureArea = () => {
+      const prefectureBlockName = '[data-weather-block="prefecture"]';
+      const prefectureBlock = document.querySelector(prefectureBlockName);
+      prefectureBlock?.remove();
+    };
+
+    /**
      * 地域に合致する都道府県の一覧を返す関数
      * @function
      * @param {string} regionName
@@ -98,6 +110,7 @@ export const weather = async () => {
         const regionName = event.target.value;
         const list = getMatchList(regionName, prefectureList);
         prefectureData.list = list;
+        deletePrefectureArea();
         createSelectBlock(prefectureData);
       });
     });
