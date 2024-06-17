@@ -72,9 +72,9 @@ export const weather = async () => {
    * @param {{key: string, description: string, list: Array<string>}} regionData
    * @param {{key: string, description: string, prefectureList: Array<{name: string, ja:string, region: string}>}} prefectureData
    */
-  const updatePrefectureList = (regionData, prefectureData) => {
+  const updatePrefectureList = (regionData, prefectureRowData) => {
     const { key: regionKey } = regionData;
-    const { prefectureList } = prefectureData;
+    const { prefectureList } = prefectureRowData;
     /**
      * @type {NodeListOf<HTMLInputElement>}
      */
@@ -105,11 +105,28 @@ export const weather = async () => {
       return matchList;
     };
 
+    /**
+     * 都道県データを整形する関数
+     * @function
+     * @param {{key: string, description: string, prefectureList: Array<{name: string, ja:string, region: string}>}} prefectureRowData
+     * @param {Array<string>} list
+     * @returns {{key: string, description: string, list: Array<string>}}
+     */
+    const formatPrefectureData = (prefectureRowData, list) => {
+      const { key, description } = prefectureRowData;
+      const formatData = {
+        key: key,
+        description: description,
+        list: list,
+      };
+      return formatData;
+    };
+
     regionInputs.forEach((input) => {
       input.addEventListener("change", (event) => {
         const regionName = event.target.value;
         const list = getMatchList(regionName, prefectureList);
-        prefectureData.list = list;
+        const prefectureData = formatPrefectureData(prefectureRowData, list);
         deletePrefectureArea();
         createSelectBlock(prefectureData);
       });
@@ -120,7 +137,7 @@ export const weather = async () => {
    * @type {Object} 地域情報が格納されたオブジェクト
    */
   const areaData = await fetchCityData();
-  const { region, prefecture } = areaData;
-  createSelectBlock(region);
-  updatePrefectureList(region, prefecture);
+  const { region: regionData, prefecture: prefectureRowData } = areaData;
+  createSelectBlock(regionData);
+  updatePrefectureList(regionData, prefectureRowData);
 };
