@@ -169,6 +169,45 @@ export const weather = async () => {
   };
 
   /**
+   * 選択された都道府県の英語を返す関数
+   * @function
+   * @param {{key: string, description: string, prefectureList: Array<{name: string, ja:string, region: string}>}} prefectureRowData
+   * @returns {void}
+   */
+  const createWeatherInformation = (prefectureRowData) => {
+    const { key: prefectureKey, prefectureList } = prefectureRowData;
+    /**
+     * @type {HTMLButtonElement | null}
+     */
+    const submitButton = document.querySelector("[data-weather-submit]");
+    if (!submitButton) return;
+
+    /**
+     * 都道府県の日本語から英語を取得する関数
+     * @function
+     * @param {string} prefectureJa
+     * @param {Array<{name: string, ja:string, region: string}>} prefectureList
+     * @returns {string}
+     */
+    const getPrefectureEn = (prefectureJa, prefectureList) => {
+      const prefectureEn = prefectureList.find((item) => {
+        item.ja === prefectureJa;
+      }).name;
+      return prefectureEn;
+    };
+
+    submitButton.addEventListener("click", (e) => {
+      e.preventDefault();
+      const prefectureInputs = document.getElementsByName(prefectureKey);
+      const checkedPrefecture = [...prefectureInputs].find((input) => {
+        input.checked === true;
+      }).value;
+      const prefectureEn = getPrefectureEn(checkedPrefecture, prefectureList);
+      console.log(prefectureEn);
+    });
+  };
+
+  /**
    * @type {Object} 地域情報が格納されたオブジェクト
    */
   const areaData = await fetchCityData();
@@ -176,4 +215,5 @@ export const weather = async () => {
   createSelectBlock(regionData);
   updatePrefectureBlock(regionData, prefectureRowData);
   switchActiveSubmitButton(regionData, prefectureRowData);
+  createWeatherInformation(prefectureRowData);
 };
