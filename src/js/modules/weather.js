@@ -216,6 +216,57 @@ export const weather = async () => {
       return prefectureEn;
     };
 
+    /**
+     * 天気情報を整形する関数
+     * @function
+     * @param {Object} data
+     * @returns {{iconURL: string, name: string, temp: number, temp_min: number, temp_max: number, weatherJa: string}}
+     */
+    const formatWeatherData = (data) => {
+      /**
+       * @type {{name: string}}
+       */
+      const { main, weather, name } = data;
+      const weatherMap = {
+        Thunderstorm: "雷雨",
+        Drizzle: "霧雨",
+        Rain: "雨",
+        Snow: "雪",
+        Clear: "晴れ",
+        Clouds: "曇り",
+        Mist: "霧",
+        Smoke: "スモーク",
+        Haze: "煙霧",
+        Dust: "砂塵",
+        Fog: "霧",
+        Sand: "砂",
+        Ash: "火山灰",
+        Squall: "スコール",
+        Tornado: "トルネード",
+      };
+
+      /**
+       * @type {{temp: number, temp_min: number, temp_max: number}}
+       */
+      const { temp, temp_min, temp_max } = main;
+      const { icon, main: weatherMain } = weather[0];
+      /**
+       * @type {string}
+       */
+      const weatherJa = weatherMap[weatherMain];
+      const iconURL = `https://openweathermap.org/img/wn/${icon}@2x.png`;
+      const weatherData = {
+        iconURL,
+        weatherJa,
+        temp,
+        temp_min,
+        temp_max,
+        name,
+      };
+
+      return weatherData;
+    };
+
     submitButton.addEventListener("click", async (e) => {
       e.preventDefault();
       const prefectureInputs = document.getElementsByName(prefectureKey);
@@ -224,7 +275,8 @@ export const weather = async () => {
       }).value;
       const prefectureEn = getPrefectureEn(checkedPrefecture, prefectureList);
       const data = await fetchWeatherInformation(prefectureEn);
-      console.log(data);
+      const weatherData = formatWeatherData(data);
+      console.log(weatherData);
     });
   };
 
