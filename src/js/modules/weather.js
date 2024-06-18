@@ -68,11 +68,13 @@ export const weather = async () => {
   };
 
   /**
-   *
+   * 都道府県ボタンのElementを作成する関数
+   * @function
    * @param {{key: string, description: string, list: Array<string>}} regionData
    * @param {{key: string, description: string, prefectureList: Array<{name: string, ja:string, region: string}>}} prefectureData
+   * @returns {void} 返り値なし
    */
-  const updatePrefectureList = (regionData, prefectureRowData) => {
+  const updatePrefectureBlock = (regionData, prefectureRowData) => {
     const { key: regionKey } = regionData;
     const { prefectureList } = prefectureRowData;
     /**
@@ -139,5 +141,5 @@ export const weather = async () => {
   const areaData = await fetchCityData();
   const { region: regionData, prefecture: prefectureRowData } = areaData;
   createSelectBlock(regionData);
-  updatePrefectureList(regionData, prefectureRowData);
+  updatePrefectureBlock(regionData, prefectureRowData);
 };
