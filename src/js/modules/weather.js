@@ -24,6 +24,26 @@ export const weather = async () => {
   };
 
   /**
+   * 天気APIを叩き、天気データを取得する関数
+   * @async
+   * @function
+   * @param {string} prefectureEn
+   * @returns  {Promise<any>} Promiseオブジェクトはjsonデータを表す
+   */
+  const fetchWeatherInformation = async (prefectureEn) => {
+    const url = `https://api.openweathermap.org/data/2.5/weather?q=${prefectureEn},JP&appid=7eee7d1c94d90b44b501ad63159c2c29&units=metric&lang=ja`;
+    /**
+     * @type {Response} responseオブジェクト
+     */
+    const response = await fetch(url);
+    /**
+     * @type {Object} 地域情報が格納されたオブジェクト
+     */
+    const data = await response.json();
+    return data;
+  };
+
+  /**
    * 地域ボタンのElementを作成する関数
    * @function
    * @param {{key: string, description: string, list: Array<string>}} areaData
@@ -196,14 +216,15 @@ export const weather = async () => {
       return prefectureEn;
     };
 
-    submitButton.addEventListener("click", (e) => {
+    submitButton.addEventListener("click", async (e) => {
       e.preventDefault();
       const prefectureInputs = document.getElementsByName(prefectureKey);
       const checkedPrefecture = [...prefectureInputs].find((input) => {
         input.checked === true;
       }).value;
       const prefectureEn = getPrefectureEn(checkedPrefecture, prefectureList);
-      console.log(prefectureEn);
+      const data = await fetchWeatherInformation(prefectureEn);
+      console.log(data);
     });
   };
 
