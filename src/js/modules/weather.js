@@ -136,10 +136,44 @@ export const weather = async () => {
   };
 
   /**
+   * 都道県データを整形する関数
+   * @function
+   * @param {{key: string, description: string, list: Array<string>}} regionData
+   * @param {{key: string, description: string, prefectureList: Array<{name: string, ja:string, region: string}>}} prefectureRowData
+   * @returns {{key: string, description: string, list: Array<string>}}
+   */
+  const switchActiveSubmitButton = (regionData, prefectureRowData) => {
+    const { key: regionKey } = regionData;
+    const { key: prefectureKey } = prefectureRowData;
+    /**
+     * @type {NodeListOf<HTMLInputElement>}
+     */
+    const regionInputs = document.getElementsByName(regionKey);
+    /**
+     * @type {HTMLButtonElement | null}
+     */
+    const submitButton = document.querySelector("[data-weather-submit]");
+    if (!submitButton) return;
+
+    regionInputs.forEach((input) => {
+      input.addEventListener("change", () => {
+        const prefectureInputs = document.getElementsByName(prefectureKey);
+        submitButton.disabled = true;
+        prefectureInputs.forEach((prefectureInput) => {
+          prefectureInput.addEventListener("change", () => {
+            submitButton.disabled = false;
+          });
+        });
+      });
+    });
+  };
+
+  /**
    * @type {Object} 地域情報が格納されたオブジェクト
    */
   const areaData = await fetchCityData();
   const { region: regionData, prefecture: prefectureRowData } = areaData;
   createSelectBlock(regionData);
   updatePrefectureBlock(regionData, prefectureRowData);
+  switchActiveSubmitButton(regionData, prefectureRowData);
 };
