@@ -31,7 +31,7 @@ export const weather = async () => {
    * @returns  {Promise<any>} Promiseオブジェクトはjsonデータを表す
    */
   const fetchWeatherInformation = async (prefectureEn) => {
-    const url = `https://api.openweathermap.org/data/2.5/weather?q=${prefectureEn},JP&appid=7eee7d1c94d90b44b501ad63159c2c29&units=metric&lang=ja`;
+    const url = `https://getweatherinformation-afq4w33w3q-uc.a.run.app/?prefecture=${prefectureEn}`;
     /**
      * @type {Response} responseオブジェクト
      */
@@ -210,9 +210,9 @@ export const weather = async () => {
      * @returns {string}
      */
     const getPrefectureEn = (prefectureJa, prefectureList) => {
-      const prefectureEn = prefectureList.find((item) => {
-        item.ja === prefectureJa;
-      }).name;
+      const prefectureEn = prefectureList.find(
+        (item) => item.ja === prefectureJa,
+      ).name;
       return prefectureEn;
     };
 
@@ -269,10 +269,10 @@ export const weather = async () => {
 
     submitButton.addEventListener("click", async (e) => {
       e.preventDefault();
-      const prefectureInputs = document.getElementsByName(prefectureKey);
-      const checkedPrefecture = [...prefectureInputs].find((input) => {
-        input.checked === true;
-      }).value;
+      const prefectureInputs = [...document.getElementsByName(prefectureKey)];
+      const checkedPrefecture = prefectureInputs.find(
+        (input) => input.checked === true,
+      ).value;
       const prefectureEn = getPrefectureEn(checkedPrefecture, prefectureList);
       const data = await fetchWeatherInformation(prefectureEn);
       const weatherData = formatWeatherData(data);
