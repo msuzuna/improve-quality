@@ -321,6 +321,7 @@ export const weather = async () => {
       const prefectureEn = getPrefectureEn(checkedPrefecture, prefectureList);
       const data = await fetchWeatherInformation(prefectureEn);
       const weatherData = formatWeatherData(data);
+      deletePrefectureArea(dataKey);
       createResultBlock(weatherData, dataKey);
     });
   };
