@@ -29,3 +29,13 @@
     border-color: var(--color-accent-dark);
   }
 }
+
+.button-submit:disabled {
+  pointer-events: none;
+  background-color: var(--color-gray);
+  border-color: var(--color-gray);
+}
+
+.button-wrap {
+  text-align: center;
+}

@@ -1,0 +1,26 @@
+input[type="radio"] {
+  position: absolute;
+}
+
+input[type="radio"] + label {
+  display: block;
+  padding: 8px 16px;
+  border: 1px solid var(--color-main);
+  border-radius: 6px;
+
+  &:hover,
+  &:focus {
+    background-color: var(--color-primary-transparent);
+  }
+}
+
+input[type="radio"]:checked + label {
+  color: var(--color-white);
+  pointer-events: none;
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.input-wrap {
+  position: relative;
+}
