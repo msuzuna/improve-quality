@@ -3,3 +3,30 @@
   flex-wrap: wrap;
   gap: 20px;
 }
+
+.weather-contents {
+  display: flex;
+  flex-direction: column;
+  row-gap: 30px;
+}
+
+.weather-content {
+  display: flex;
+  flex-direction: column;
+  row-gap: 10px;
+}
+
+.weather-result-wrap {
+  display: flex;
+  column-gap: 20px;
+  align-items: center;
+  text-align: center;
+}
+
+.weather-result {
+  font-size: 2rem;
+}
+
+.weather-result-temp {
+  display: block;
+}
