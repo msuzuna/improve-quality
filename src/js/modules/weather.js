@@ -72,7 +72,7 @@ export const weather = async () => {
     const div = document.createElement("div");
     const p = document.createElement("p");
     const ul = document.createElement("ul");
-    div.classList.add("section-inner");
+    div.classList.add("weather-content");
     div.setAttribute("data-weather-block", key);
     p.innerHTML = description;
     ul.classList.add("button-list");
@@ -293,15 +293,18 @@ export const weather = async () => {
       const divTempMax = document.createElement("div");
       const divTempMin = document.createElement("div");
 
+      divWrap.classList.add("weather-content");
       divWrap.setAttribute("data-weather-block", key);
       pTitle.innerHTML = `現在の${name}の天気`;
+      divContent.classList.add("weather-result-wrap");
       img.setAttribute("src", iconURL);
       img.setAttribute("width", 50);
       img.setAttribute("height", 50);
       spanWeather.innerHTML = weatherJa;
-      divTemp.innerHTML = `<span>現在の気温</span><span>${temp}</span>`;
-      divTempMax.innerHTML = `<span>最高気温</span><span>${temp_max}</span>`;
-      divTempMin.innerHTML = `<span>最低気温</span><span>${temp_min}</span>`;
+      spanWeather.classList.add("weather-result");
+      divTemp.innerHTML = `<span class="weather-result-temp">現在の気温</span><span class="weather-result-temp">${temp}</span>`;
+      divTempMax.innerHTML = `<span class="weather-result-temp">最高気温</span><span class="weather-result-temp">${temp_max}</span>`;
+      divTempMin.innerHTML = `<span class="weather-result-temp">最低気温</span><span class="weather-result-temp">${temp_min}</span>`;
       divContent.appendChild(img);
       divContent.appendChild(spanWeather);
       divContent.appendChild(divTemp);
