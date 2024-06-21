@@ -195,7 +195,7 @@ export const weather = async () => {
    * @param {{key: string, description: string, prefectureList: Array<{name: string, ja:string, region: string}>}} prefectureRowData
    * @returns {void}
    */
-  const createWeatherInformation = (prefectureRowData) => {
+  const updateWeatherInformation = (prefectureRowData) => {
     const { key: prefectureKey, prefectureList } = prefectureRowData;
     /**
      * @type {HTMLButtonElement | null}
@@ -289,5 +289,5 @@ export const weather = async () => {
   createSelectBlock(regionData);
   updatePrefectureBlock(regionData, prefectureRowData);
   switchActiveSubmitButton(regionData, prefectureRowData);
-  createWeatherInformation(prefectureRowData);
+  updateWeatherInformation(prefectureRowData);
 };
