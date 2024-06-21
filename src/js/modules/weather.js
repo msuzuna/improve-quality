@@ -44,6 +44,18 @@ export const weather = async () => {
   };
 
   /**
+   * ブロックを削除する関数
+   * @function
+   * @param {string} key
+   * @returns {void}
+   */
+  const deletePrefectureArea = (key) => {
+    const prefectureBlockName = `[data-weather-block="${key}"]`;
+    const prefectureBlock = document.querySelector(prefectureBlockName);
+    prefectureBlock?.remove();
+  };
+
+  /**
    * 地域ボタンのElementを作成する関数
    * @function
    * @param {{key: string, description: string, list: Array<string>}} areaData
@@ -96,22 +108,11 @@ export const weather = async () => {
    */
   const updatePrefectureBlock = (regionData, prefectureRowData) => {
     const { key: regionKey } = regionData;
-    const { prefectureList } = prefectureRowData;
+    const { key: prefectureKey, prefectureList } = prefectureRowData;
     /**
      * @type {NodeListOf<HTMLInputElement>}
      */
     const regionInputs = document.getElementsByName(regionKey);
-
-    /**
-     * 都道府県ブロックを削除する関数
-     * @function
-     * @returns {void}
-     */
-    const deletePrefectureArea = () => {
-      const prefectureBlockName = '[data-weather-block="prefecture"]';
-      const prefectureBlock = document.querySelector(prefectureBlockName);
-      prefectureBlock?.remove();
-    };
 
     /**
      * 地域に合致する都道府県の一覧を返す関数
@@ -149,7 +150,7 @@ export const weather = async () => {
         const regionName = event.target.value;
         const list = getMatchList(regionName, prefectureList);
         const prefectureData = formatPrefectureData(prefectureRowData, list);
-        deletePrefectureArea();
+        deletePrefectureArea(prefectureKey);
         createSelectBlock(prefectureData);
       });
     });
