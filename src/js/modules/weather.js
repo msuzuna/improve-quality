@@ -212,7 +212,7 @@ export const weather = async () => {
      * 天気情報を整形する関数
      * @function
      * @param {Object} data
-     * @returns {{iconURL: string, name: string, temp: number, temp_min: number, temp_max: number, weatherJa: string}}
+     * @returns {{iconURL: string, areaName: string, temp: number, temp_min: number, temp_max: number, weatherJa: string}}
      */
     const formatWeatherData = (data) => {
       /** @type {{name: string}} */
@@ -264,7 +264,7 @@ export const weather = async () => {
       /** @type {HTMLDivElement | null} ボタンリストのElement */
       const weatherWrapElement = document.querySelector("[data-weather-wrap]");
       if (!weatherWrapElement) return;
-      const { iconURL, name, temp, temp_min, temp_max, weatherJa } =
+      const { iconURL, areaName, temp, temp_min, temp_max, weatherJa } =
         weatherData;
 
       const divWrap = document.createElement("div");
@@ -279,7 +279,7 @@ export const weather = async () => {
 
       divWrap.classList.add("weather-content");
       divWrap.setAttribute("data-weather-block", key);
-      pTitle.innerHTML = `現在の${name}の天気`;
+      pTitle.innerHTML = `現在の${areaName}の天気`;
       divContent.classList.add("weather-result-wrap");
       img.setAttribute("src", iconURL);
       img.setAttribute("width", imageSize);
