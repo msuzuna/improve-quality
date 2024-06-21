@@ -197,6 +197,7 @@ export const weather = async () => {
    */
   const updateWeatherInformation = (prefectureRowData) => {
     const { key: prefectureKey, prefectureList } = prefectureRowData;
+    const dataKey = "result";
     /**
      * @type {HTMLButtonElement | null}
      */
@@ -268,6 +269,49 @@ export const weather = async () => {
       return weatherData;
     };
 
+    /**
+     * 天気の結果を表示させる関数
+     * @function
+     * @param {{iconURL: string, name: string, temp: number, temp_min: number, temp_max: number, weatherJa: string}} weatherData
+     * @returns {void}
+     */
+    const createResultBlock = (weatherData, key) => {
+      /**
+       * @type {HTMLDivElement | null} ボタンリストのElement
+       */
+      const weatherBlockElement = document.querySelector("[data-weather]");
+      if (!weatherBlockElement) return;
+      const { iconURL, name, temp, temp_min, temp_max, weatherJa } =
+        weatherData;
+
+      const divWrap = document.createElement("div");
+      const pTitle = document.createElement("p");
+      const divContent = document.createElement("div");
+      const img = document.createElement("img");
+      const spanWeather = document.createElement("span");
+      const divTemp = document.createElement("div");
+      const divTempMax = document.createElement("div");
+      const divTempMin = document.createElement("div");
+
+      divWrap.setAttribute("data-weather-block", key);
+      pTitle.innerHTML = `現在の${name}の天気`;
+      img.setAttribute("src", iconURL);
+      img.setAttribute("width", 50);
+      img.setAttribute("height", 50);
+      spanWeather.innerHTML = weatherJa;
+      divTemp.innerHTML = `<span>現在の気温</span><span>${temp}</span>`;
+      divTempMax.innerHTML = `<span>最高気温</span><span>${temp_max}</span>`;
+      divTempMin.innerHTML = `<span>最低気温</span><span>${temp_min}</span>`;
+      divContent.appendChild(img);
+      divContent.appendChild(spanWeather);
+      divContent.appendChild(divTemp);
+      divContent.appendChild(divTempMax);
+      divContent.appendChild(divTempMin);
+      divWrap.appendChild(pTitle);
+      divWrap.appendChild(divContent);
+      weatherBlockElement.appendChild(divWrap);
+    };
+
     submitButton.addEventListener("click", async (e) => {
       e.preventDefault();
       const prefectureInputs = [...document.getElementsByName(prefectureKey)];
@@ -277,7 +321,7 @@ export const weather = async () => {
       const prefectureEn = getPrefectureEn(checkedPrefecture, prefectureList);
       const data = await fetchWeatherInformation(prefectureEn);
       const weatherData = formatWeatherData(data);
-      console.log(weatherData);
+      createResultBlock(weatherData, dataKey);
     });
   };
 
