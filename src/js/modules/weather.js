@@ -312,8 +312,7 @@ export const weather = async () => {
       weatherBlockElement.appendChild(divWrap);
     };
 
-    submitButton.addEventListener("click", async (e) => {
-      e.preventDefault();
+    submitButton.addEventListener("click", async () => {
       const prefectureInputs = [...document.getElementsByName(prefectureKey)];
       const checkedPrefecture = prefectureInputs.find(
         (input) => input.checked === true,
