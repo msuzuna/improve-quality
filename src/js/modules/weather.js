@@ -326,6 +326,7 @@ export const weather = async () => {
       const weatherData = formatWeatherData(data);
       deleteBlockArea(dataKey);
       createResultBlock(weatherData, dataKey);
+      submitButton.blur();
     });
   };
 
