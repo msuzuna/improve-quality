@@ -49,7 +49,7 @@ export const weather = async () => {
    * @param {string} key
    * @returns {void}
    */
-  const deletePrefectureArea = (key) => {
+  const deleteBlockArea = (key) => {
     const prefectureBlockName = `[data-weather-block="${key}"]`;
     const prefectureBlock = document.querySelector(prefectureBlockName);
     prefectureBlock?.remove();
@@ -150,7 +150,8 @@ export const weather = async () => {
         const regionName = event.target.value;
         const list = getMatchList(regionName, prefectureList);
         const prefectureData = formatPrefectureData(prefectureRowData, list);
-        deletePrefectureArea(prefectureKey);
+        deleteBlockArea(prefectureKey);
+        deleteBlockArea("result");
         createSelectBlock(prefectureData);
       });
     });
@@ -323,7 +324,7 @@ export const weather = async () => {
       const prefectureEn = getPrefectureEn(checkedPrefecture, prefectureList);
       const data = await fetchWeatherInformation(prefectureEn);
       const weatherData = formatWeatherData(data);
-      deletePrefectureArea(dataKey);
+      deleteBlockArea(dataKey);
       createResultBlock(weatherData, dataKey);
     });
   };
