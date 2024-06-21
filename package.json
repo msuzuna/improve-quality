@@ -51,6 +51,7 @@
     "watch/html": "watch 'yarn run html' ./src/",
     "watch/css": "watch 'yarn run css' ./src/",
     "watch/js": "watch 'yarn run js' ./src/js",
+    "watch/json": "watch 'yarn run json' ./src/json",
     "watch/server": "browser-sync start --server dist --files 'dist'",
     "dev": "yarn run-p watch/html watch/css watch/js watch/json watch/server",
     "build": "yarn run html && yarn run css && yarn run js && yarn run json",
