@@ -6,33 +6,27 @@
  */
 export const weather = async () => {
   /**
-   * 地域データをfetchで取得する関数
+   * fetchでデータを取得する関数
    * @async
    * @function
+   * @param {string} url
    * @returns {Promise<any>} Promiseオブジェクトはjsonデータを表す
    */
-  const fetchCityData = async () => {
-    /** @type {Response} responseオブジェクト */
-    const response = await fetch("../../json/city.json");
-    /** @type {Object} 地域情報が格納されたオブジェクト */
-    const data = await response.json();
-    return data;
-  };
+  const fetchData = async (url) => {
+    try {
+      /** @type {Response} responseオブジェクト */
+      const response = await fetch(url);
 
-  /**
-   * Firebase CloudFunctions経由で天気データを取得する関数
-   * @async
-   * @function
-   * @param {string} prefectureEn
-   * @returns  {Promise<any>} Promiseオブジェクトはjsonデータを表す
-   */
-  const fetchWeatherInformation = async (prefectureEn) => {
-    const url = `https://getweatherinformation-afq4w33w3q-uc.a.run.app/?prefecture=${prefectureEn}`;
-    /** @type {Response} responseオブジェクト */
-    const response = await fetch(url);
-    /** @type {Object} 天気情報が格納されたオブジェクト */
-    const data = await response.json();
-    return data;
+      if (!response.ok) {
+        throw new Error(`サーバーからの応答が異常です: ${response.status}`);
+      }
+
+      /** @type {Object} jsonデータ */
+      const data = response.json();
+      return data;
+    } catch (error) {
+      console.log("エラーが発生しました:", error);
+    }
   };
 
   /**
@@ -317,8 +311,9 @@ export const weather = async () => {
         checkedPrefectureValue,
         prefectureList,
       );
+      const url = `https://getweatherinformation-afq4w33w3q-uc.a.run.app/?prefecture=${prefectureEn}`;
       /** @type {Object} 天気データが格納されたオブジェクト */
-      const data = await fetchWeatherInformation(prefectureEn);
+      const data = await fetchData(url);
       const weatherData = formatWeatherData(data);
       deleteBlockArea(dataKey);
       createResultBlock(weatherData, dataKey);
@@ -327,7 +322,7 @@ export const weather = async () => {
   };
 
   /** @type {Object} 地域情報が格納されたオブジェクト */
-  const areaData = await fetchCityData();
+  const areaData = await fetchData("../../json/city.json");
   const { region: regionData, prefecture: prefectureRowData } = areaData;
   createSelectBlock(regionData);
   updatePrefectureBlock(regionData, prefectureRowData);
