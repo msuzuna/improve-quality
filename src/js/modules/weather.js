@@ -59,17 +59,17 @@ export const weather = async () => {
     if (!weatherBlockElement) return;
     const { key, description, list } = areaData;
 
-    const div = document.createElement("div");
-    const p = document.createElement("p");
-    const ul = document.createElement("ul");
-    div.classList.add("weather-content");
-    div.setAttribute("data-weather-block", key);
-    p.innerHTML = description;
-    ul.classList.add("button-list");
-    ul.setAttribute("data-weather-list", key);
-    div.appendChild(p);
-    div.appendChild(ul);
-    weatherBlockElement.appendChild(div);
+    const fieldset = document.createElement("fieldset");
+    const legend = document.createElement("legend");
+    const menu = document.createElement("menu");
+    fieldset.setAttribute("data-weather-block", key);
+    legend.innerHTML = description;
+    legend.classList.add("weather-caption");
+    menu.classList.add("input-list");
+    menu.setAttribute("data-weather-list", key);
+    fieldset.appendChild(legend);
+    fieldset.appendChild(menu);
+    weatherBlockElement.appendChild(fieldset);
 
     list?.forEach((listItem, index) => {
       const id = `${key}${index}`;
@@ -85,7 +85,7 @@ export const weather = async () => {
       label.innerText = listItem;
       li.appendChild(input);
       li.appendChild(label);
-      ul.appendChild(li);
+      menu.appendChild(li);
     });
   };
 
@@ -272,28 +272,32 @@ export const weather = async () => {
       const divContent = document.createElement("div");
       const img = document.createElement("img");
       const spanWeather = document.createElement("span");
+      const dl = document.createElement("dl");
       const divTemp = document.createElement("div");
       const divTempMax = document.createElement("div");
       const divTempMin = document.createElement("div");
       const imageSize = 50;
 
-      divWrap.classList.add("weather-content");
+      divWrap.classList.add("weather-result-wrap");
       divWrap.setAttribute("data-weather-block", key);
       pTitle.innerHTML = `現在の${areaName}の天気`;
-      divContent.classList.add("weather-result-wrap");
+      divContent.classList.add("weather-result-content");
       img.setAttribute("src", iconURL);
       img.setAttribute("width", imageSize);
       img.setAttribute("height", imageSize);
+      img.setAttribute("alt", "");
       spanWeather.innerHTML = weatherJa;
-      spanWeather.classList.add("weather-result");
-      divTemp.innerHTML = `<span class="weather-result-temp">現在の気温</span><span class="weather-result-temp">${temp}</span>`;
-      divTempMax.innerHTML = `<span class="weather-result-temp">最高気温</span><span class="weather-result-temp">${temp_max}</span>`;
-      divTempMin.innerHTML = `<span class="weather-result-temp">最低気温</span><span class="weather-result-temp">${temp_min}</span>`;
+      spanWeather.classList.add("weather-result-main");
+      dl.classList.add("weather-result-temp-wrap");
+      divTemp.innerHTML = `<dt class="weather-result-temp">現在の気温</dt><dd class="weather-result-temp">${temp}</dd>`;
+      divTempMax.innerHTML = `<dt class="weather-result-temp">最高気温</dt><dd class="weather-result-temp">${temp_max}</dd>`;
+      divTempMin.innerHTML = `<dt class="weather-result-temp">最低気温</dt><dd class="weather-result-temp">${temp_min}</dd>`;
+      dl.appendChild(divTemp);
+      dl.appendChild(divTempMax);
+      dl.appendChild(divTempMin);
       divContent.appendChild(img);
       divContent.appendChild(spanWeather);
-      divContent.appendChild(divTemp);
-      divContent.appendChild(divTempMax);
-      divContent.appendChild(divTempMin);
+      divContent.appendChild(dl);
       divWrap.appendChild(pTitle);
       divWrap.appendChild(divContent);
       weatherWrapElement.appendChild(divWrap);

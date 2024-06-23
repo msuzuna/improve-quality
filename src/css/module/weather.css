@@ -1,4 +1,4 @@
-.button-list {
+.input-list {
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
@@ -10,21 +10,31 @@
   row-gap: 30px;
 }
 
-.weather-content {
+.weather-caption {
+  margin-bottom: 10px;
+}
+
+.weather-result-wrap {
   display: flex;
   flex-direction: column;
   row-gap: 10px;
 }
 
-.weather-result-wrap {
+.weather-result-content {
+  display: flex;
+  column-gap: 20px;
+  align-items: center;
+}
+
+.weather-result-main {
+  font-size: 2rem;
+}
+
+.weather-result-temp-wrap {
   display: flex;
   column-gap: 20px;
   align-items: center;
   text-align: center;
-}
-
-.weather-result {
-  font-size: 2rem;
 }
 
 .weather-result-temp {
