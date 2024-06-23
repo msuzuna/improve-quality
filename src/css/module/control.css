@@ -1,24 +1,31 @@
 input[type="radio"] {
   position: absolute;
-}
+  inset: 0;
+  z-index: -1;
 
-input[type="radio"] + label {
-  display: block;
-  padding: 8px 16px;
-  border: 1px solid var(--color-main);
-  border-radius: 6px;
+  + label {
+    display: block;
+    padding: 8px 16px;
+    border: 1px solid var(--color-main);
+    border-radius: 6px;
 
-  &:hover,
-  &:focus {
-    background-color: var(--color-primary-transparent);
+    &:hover {
+      background-color: var(--color-primary-transparent);
+    }
   }
-}
 
-input[type="radio"]:checked + label {
-  color: var(--color-white);
-  pointer-events: none;
-  background: var(--color-primary);
-  border-color: var(--color-primary);
+  &:focus {
+    + label {
+      background-color: var(--color-primary-transparent);
+    }
+  }
+
+  &:checked + label {
+    color: var(--color-white);
+    pointer-events: none;
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+  }
 }
 
 .input-wrap {
