@@ -282,11 +282,9 @@ export const weather = async () => {
       /** @type {NodeListOf<HTMLInputElement>} */
       const prefectureInputs = document.getElementsByName(prefectureKey);
       /** @type {HTMLInputElement | number} */
-      const checkedPrefectureInput = [...prefectureInputs]?.find(
+      const checkedPrefectureInput = [...prefectureInputs].find(
         (input) => input.checked === true,
       );
-      if (typeof checkedPrefectureInput === "number") return;
-
       const checkedPrefectureValue = checkedPrefectureInput.value;
       const prefectureEn = getPrefectureEn(
         checkedPrefectureValue,
@@ -304,7 +302,9 @@ export const weather = async () => {
 
   /** @type {Object} 地域情報が格納されたオブジェクト */
   const areaData = await fetchData("../../json/city.json");
+  if (!areaData) return;
   const { region: regionData, prefecture: prefectureRowData } = areaData;
+  if (!regionData || !prefectureRowData) return;
   createSelectBlock(regionData);
   updatePrefectureBlock(regionData, prefectureRowData);
   switchActiveRequestButton(regionData, prefectureRowData);
