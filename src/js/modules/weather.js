@@ -206,42 +206,23 @@ export const weather = async () => {
      * 天気情報を整形する関数
      * @function
      * @param {Object} data
-     * @returns {{iconURL: string, areaName: string, temp: number, temp_min: number, temp_max: number, weatherJa: string}}
+     * @returns {{areaName: string,iconURL: string, description: string,  temp: number, temp_min: number, temp_max: number}}
      */
     const formatWeatherData = (data) => {
       /** @type {{name: string}} */
       const { main, weather, name: areaName } = data;
-      const weatherMap = {
-        Thunderstorm: "雷雨",
-        Drizzle: "霧雨",
-        Rain: "雨",
-        Snow: "雪",
-        Clear: "晴れ",
-        Clouds: "曇り",
-        Mist: "霧",
-        Smoke: "スモーク",
-        Haze: "煙霧",
-        Dust: "砂塵",
-        Fog: "霧",
-        Sand: "砂",
-        Ash: "火山灰",
-        Squall: "スコール",
-        Tornado: "トルネード",
-      };
-
       /** @type {{temp: number, temp_min: number, temp_max: number}} */
       const { temp, temp_min, temp_max } = main;
-      const { icon, main: weatherMain } = weather[0];
+      const { icon, description } = weather[0];
       /** @type {string} */
-      const weatherJa = weatherMap[weatherMain];
       const iconURL = `https://openweathermap.org/img/wn/${icon}@2x.png`;
       const weatherData = {
+        areaName,
         iconURL,
-        weatherJa,
+        description,
         temp,
         temp_min,
         temp_max,
-        areaName,
       };
 
       return weatherData;
@@ -250,7 +231,7 @@ export const weather = async () => {
     /**
      * 天気の結果を表示させる関数
      * @function
-     * @param {{iconURL: string, name: string, temp: number, temp_min: number, temp_max: number, weatherJa: string}} weatherData
+     * @param {{areaName: string,iconURL: string, description: string,  temp: number, temp_min: number, temp_max: number}} weatherData
      * @param {string} key
      * @returns {void} 返り値なし
      */
@@ -258,7 +239,7 @@ export const weather = async () => {
       /** @type {HTMLDivElement | null} ボタンリストのElement */
       const weatherWrapElement = document.querySelector("[data-weather-wrap]");
       if (!weatherWrapElement) return;
-      const { iconURL, areaName, temp, temp_min, temp_max, weatherJa } =
+      const { areaName, iconURL, description, temp, temp_min, temp_max } =
         weatherData;
 
       const divWrap = document.createElement("div");
@@ -280,7 +261,7 @@ export const weather = async () => {
       img.setAttribute("width", imageSize);
       img.setAttribute("height", imageSize);
       img.setAttribute("alt", "");
-      spanWeather.innerHTML = weatherJa;
+      spanWeather.innerHTML = description;
       spanWeather.classList.add("weather-result-main");
       dl.classList.add("weather-result-temp-wrap");
       divTemp.innerHTML = `<dt class="weather-result-temp">現在の気温</dt><dd class="weather-result-temp">${temp}</dd>`;
