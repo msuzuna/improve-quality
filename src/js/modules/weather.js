@@ -45,7 +45,7 @@ export const weather = async () => {
      */
     const getPrefectureEn = (prefectureJa, prefectureList) => {
       const prefectureEn = prefectureList.find(
-        (prefecture) => prefecture.ja === prefectureJa,
+        (prefecture) => prefecture.ja === prefectureJa
       )?.value;
       return prefectureEn;
     };
@@ -78,7 +78,7 @@ export const weather = async () => {
      */
     const updateResultBlock = (weatherData, dataValue) => {
       const weatherResultElement = document.querySelector(
-        `[data-weather-block=${dataValue}]`,
+        `[data-weather-block=${dataValue}]`
       );
       if (!(weatherResultElement instanceof HTMLDivElement)) return;
       const dataResultKey = "data-weather-result";
@@ -120,7 +120,7 @@ export const weather = async () => {
       const data = await fetchData(url);
       const weatherData = formatWeatherData(data);
       const defaultBlock = document.querySelector(
-        "[data-weather-block=default]",
+        "[data-weather-block=default]"
       );
       updateResultBlock(weatherData, dataKey);
       if (defaultBlock instanceof HTMLDivElement) {
