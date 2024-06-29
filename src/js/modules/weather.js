@@ -1,4 +1,5 @@
 import { cityData } from "../data/city.js";
+import { fetchData } from "./fetch.js";
 
 /**
  * @typedef {Object} WeatherJson
@@ -26,20 +27,6 @@ import { cityData } from "../data/city.js";
  * 天気APIを利用して現在の天気を取得し、ブラウザに表示させる関数
  */
 export const weather = async () => {
-  /**
-   * fetchでデータを取得する関数
-   * @param {string} url
-   */
-  const fetchData = async (url) => {
-    const response = await fetch(url);
-
-    if (!response.ok) {
-      throw new Error(`リクエストに失敗しました: ${response.status}`);
-    }
-    const data = response.json();
-    return data;
-  };
-
   /**
    * ブロックを削除する関数
    * @param {string} dataKey
@@ -129,7 +116,7 @@ export const weather = async () => {
         const prefectureNameList = getMatchList(regionName, prefectureList);
         const prefectureData = formatPrefectureData(
           prefectureRowData,
-          prefectureNameList,
+          prefectureNameList
         );
         deleteBlockArea("data-weather-list", prefectureKey);
         createSelectBlock(prefectureData);
@@ -243,14 +230,14 @@ export const weather = async () => {
       const checkedPrefectureValue = checkedPrefectureInput.value;
       const prefectureEn = getPrefectureEn(
         checkedPrefectureValue,
-        prefectureList,
+        prefectureList
       );
       const url = `https://getweatherinformation-afq4w33w3q-uc.a.run.app/?prefecture=${prefectureEn}`;
       /** @type {WeatherApiJson} */
       const data = await fetchData(url);
       const weatherData = formatWeatherData(data);
       const defaultBlock = document.querySelector(
-        "[data-weather-block=default]",
+        "[data-weather-block=default]"
       );
       updateResultBlock(weatherData, dataKey);
       if (defaultBlock instanceof HTMLDivElement) {
