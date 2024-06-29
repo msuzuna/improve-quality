@@ -1,3 +1,5 @@
+import { fetchData } from "./fetch.js";
+
 /**
  * 天気APIを利用して現在の天気を取得し、ブラウザに表示させる関数
  * @async
@@ -5,30 +7,6 @@
  * @returns {void} 返り値なし
  */
 export const weather = async () => {
-  /**
-   * fetchでデータを取得する関数
-   * @async
-   * @function
-   * @param {string} url
-   * @returns {Promise<any>} Promiseオブジェクトはjsonデータを表す
-   */
-  const fetchData = async (url) => {
-    try {
-      /** @type {Response} responseオブジェクト */
-      const response = await fetch(url);
-
-      if (!response.ok) {
-        throw new Error(`サーバーからの応答が異常です: ${response.status}`);
-      }
-
-      /** @type {Object} jsonデータ */
-      const data = response.json();
-      return data;
-    } catch (error) {
-      console.log("エラーが発生しました:", error);
-    }
-  };
-
   /**
    * ブロックを削除する関数
    * @function
