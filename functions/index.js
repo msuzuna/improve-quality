@@ -14,3 +14,16 @@ exports.getWeatherInformation = onRequest(async (request, response) => {
   response.send(json);
   response.end();
 });
+
+exports.getMovieInformation = onRequest(async (request, response) => {
+  const api = process.env.MOVIE_API_KEY;
+  const url = `https://api.themoviedb.org/3/movie/now_playing?api_key=${api}&language=ja&region=JP&page=1`;
+  const data = await fetch(url);
+  const json = await data.json();
+  logger.info("天気情報取得", { structuredData: true });
+  response.set("Access-Control-Allow-Headers", "*");
+  response.set("Access-Control-Allow-Origin", "*");
+  response.set("Access-Control-Allow-Methods", "GET");
+  response.send(json);
+  response.end();
+});
