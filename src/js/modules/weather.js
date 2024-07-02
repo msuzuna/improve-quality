@@ -132,7 +132,7 @@ export const weather = async () => {
     regionInputs?.forEach((input) => {
       input.addEventListener("change", (event) => {
         const targetInput = event.target;
-        if (!targetInput) return;
+        if (!(targetInput instanceof EventTarget)) return;
         /** @type {string} */
         const regionName = targetInput.value;
         if (regionName === "") return;
@@ -303,7 +303,11 @@ export const weather = async () => {
   };
 
   const { region: regionData, prefecture: prefectureRowData } = cityData;
-  if (!regionData || !prefectureRowData) return;
+  if (
+    typeof regionData === "undefined" ||
+    typeof prefectureRowData === "undefined"
+  )
+    return;
   createSelectBlock(regionData);
   updatePrefectureBlock(regionData, prefectureRowData);
   switchActiveRequestButton(regionData, prefectureRowData);
