@@ -50,7 +50,7 @@ export const weather = async () => {
   const createSelectBlock = (areaData) => {
     /** @type {HTMLDivElement | null} ボタンリストのElement */
     const weatherBlockElement = document.querySelector("[data-weather]");
-    if (!weatherBlockElement) return;
+    if (!(weatherBlockElement instanceof HTMLElement)) return;
     const { key, description, list } = areaData;
 
     const fieldset = document.createElement("fieldset");
@@ -156,7 +156,7 @@ export const weather = async () => {
   const switchActiveRequestButton = (regionData, prefectureRowData) => {
     /** @type {HTMLButtonElement | null} */
     const requestButton = document.querySelector("[data-weather-request]");
-    if (!requestButton) return;
+    if (!(requestButton instanceof HTMLElement)) return;
     const { key: regionKey } = regionData;
     const { key: prefectureKey } = prefectureRowData;
     /** @type {NodeListOf<HTMLInputElement>} */
@@ -186,7 +186,7 @@ export const weather = async () => {
     const dataKey = "result";
     /** @type {HTMLButtonElement | null} */
     const requestButton = document.querySelector("[data-weather-request]");
-    if (!requestButton) return;
+    if (!(requestButton instanceof HTMLElement)) return;
 
     /**
      * 都道府県の日本語から英語を取得する関数
@@ -238,7 +238,7 @@ export const weather = async () => {
     const createResultBlock = (weatherData, key) => {
       /** @type {HTMLDivElement | null} ボタンリストのElement */
       const weatherWrapElement = document.querySelector("[data-weather-wrap]");
-      if (!weatherWrapElement) return;
+      if (!(weatherWrapElement instanceof HTMLElement)) return;
       const { areaName, iconURL, description, temp, temp_min, temp_max } =
         weatherData;
 
