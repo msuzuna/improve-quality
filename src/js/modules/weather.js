@@ -283,7 +283,7 @@ export const weather = async () => {
       const prefectureInputs = document.getElementsByName(prefectureKey);
       /** @type {HTMLInputElement | number} */
       const checkedPrefectureInput = [...prefectureInputs].find(
-        (input) => input.checked === true,
+        (input) => input.checked,
       );
       const checkedPrefectureValue = checkedPrefectureInput.value;
       const prefectureEn = getPrefectureEn(
