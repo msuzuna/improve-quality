@@ -34,38 +34,28 @@ export const weather = async () => {
   /**
    * ブロックを削除する関数
    * @function
+   * @param {string} dataProps
    * @param {string} key
    * @returns {void} 返り値なし
    */
-  const deleteBlockArea = (key) => {
-    const prefectureBlockName = `[data-weather-block="${key}"]`;
-    const prefectureBlock = document.querySelector(prefectureBlockName);
-    prefectureBlock?.remove();
+  const deleteBlockArea = (dataProps, key) => {
+    /** @type {HTMLElement | null} ボタンリストのElement */
+    const blockElement = document.querySelector(`[${dataProps}="${key}"]`);
+    if (!(blockElement instanceof HTMLElement)) return;
+    blockElement.innerHTML = "";
   };
 
   /**
    * 地域ボタンのElementを作成する関数
    * @function
-   * @param {{key: string, description: string, list: Array<string>}} areaData
+   * @param {{key: string, list: Array<string>}} areaData
    * @returns {void} 返り値なし
    */
   const createSelectBlock = (areaData) => {
-    /** @type {HTMLDivElement | null} ボタンリストのElement */
-    const weatherBlockElement = document.querySelector("[data-weather]");
-    if (!(weatherBlockElement instanceof HTMLElement)) return;
-    const { key, description, list } = areaData;
-
-    const fieldset = document.createElement("fieldset");
-    const legend = document.createElement("legend");
-    const menu = document.createElement("menu");
-    fieldset.setAttribute("data-weather-block", key);
-    legend.innerHTML = description;
-    legend.classList.add("weather-caption");
-    menu.classList.add("input-list");
-    menu.setAttribute("data-weather-list", key);
-    fieldset.appendChild(legend);
-    fieldset.appendChild(menu);
-    weatherBlockElement.appendChild(fieldset);
+    const { key, list } = areaData;
+    /** @type {HTMLMenuElement | null} ボタンリストのElement */
+    const listElement = document.querySelector(`[data-weather-list=${key}]`);
+    if (!(listElement instanceof HTMLElement)) return;
 
     list?.forEach((listItem, index) => {
       const id = `${key}${index}`;
@@ -81,7 +71,7 @@ export const weather = async () => {
       label.innerText = listItem;
       li.appendChild(input);
       li.appendChild(label);
-      menu.appendChild(li);
+      listElement.appendChild(li);
     });
   };
 
@@ -142,7 +132,7 @@ export const weather = async () => {
           prefectureRowData,
           prefectureNameList,
         );
-        deleteBlockArea(prefectureKey);
+        deleteBlockArea("data-weather-list", prefectureKey);
         createSelectBlock(prefectureData);
       });
     });
@@ -239,12 +229,13 @@ export const weather = async () => {
      */
     const createResultBlock = (weatherData, key) => {
       /** @type {HTMLDivElement | null} ボタンリストのElement */
-      const weatherWrapElement = document.querySelector("[data-weather-wrap]");
-      if (!(weatherWrapElement instanceof HTMLElement)) return;
+      const weatherResultElement = document.querySelector(
+        `[data-weather-block=${key}]`,
+      );
+      if (!(weatherResultElement instanceof HTMLElement)) return;
       const { areaName, iconURL, description, temp, temp_min, temp_max } =
         weatherData;
 
-      const divWrap = document.createElement("div");
       const pTitle = document.createElement("p");
       const divContent = document.createElement("div");
       const img = document.createElement("img");
@@ -255,8 +246,6 @@ export const weather = async () => {
       const divTempMin = document.createElement("div");
       const imageSize = 50;
 
-      divWrap.classList.add("weather-result-wrap");
-      divWrap.setAttribute("data-weather-block", key);
       pTitle.innerHTML = `現在の${areaName}の天気`;
       divContent.classList.add("weather-result-content");
       img.src = iconURL;
@@ -275,9 +264,8 @@ export const weather = async () => {
       divContent.appendChild(img);
       divContent.appendChild(spanWeather);
       divContent.appendChild(dl);
-      divWrap.appendChild(pTitle);
-      divWrap.appendChild(divContent);
-      weatherWrapElement.appendChild(divWrap);
+      weatherResultElement.appendChild(pTitle);
+      weatherResultElement.appendChild(divContent);
     };
 
     requestButton.addEventListener("click", async () => {
@@ -296,7 +284,7 @@ export const weather = async () => {
       /** @type {Object} 天気データが格納されたオブジェクト */
       const data = await fetchData(url);
       const weatherData = formatWeatherData(data);
-      deleteBlockArea(dataKey);
+      deleteBlockArea("data-weather-block", dataKey);
       createResultBlock(weatherData, dataKey);
       requestButton.blur();
     });

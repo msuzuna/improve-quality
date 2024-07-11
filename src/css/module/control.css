@@ -28,6 +28,12 @@ input[type="radio"] {
   }
 }
 
+input:read-only {
+  position: absolute;
+  pointer-events: none;
+  opacity: 0;
+}
+
 .input-wrap {
   position: relative;
 }

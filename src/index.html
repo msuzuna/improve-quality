@@ -14,7 +14,23 @@
       <section class="section" aria-live="polite">
         <div class="section-inner" data-weather-wrap>
           <h2>現在の天気</h2>
-          <div class="weather-contents" data-weather></div>
+          <div class="weather-contents" data-weather>
+            <fieldset data-weather-block="region">
+              <legend class="weather-caption">地域を選択してください。</legend>
+              <menu class="input-list" data-weather-list="region"></menu>
+            </fieldset>
+            <fieldset data-weather-block="prefecture">
+              <legend class="weather-caption">
+                都道府県を選択してください。
+              </legend>
+              <menu class="input-list" data-weather-list="prefecture">
+                <label
+                  >地域ボタンを選択すると都道府県の選択ボタンが表示されます。
+                  <input type="text" readonly />
+                </label>
+              </menu>
+            </fieldset>
+          </div>
           <div class="button-wrap">
             <button
               class="button-submit"
@@ -24,6 +40,12 @@
             >
               現在の天気を調べる
             </button>
+          </div>
+          <div class="weather-result-wrap" data-weather-block="result">
+            <label
+              >「現在の天気を調べる」ボタンを選択すると現在の天気が表示されます。
+              <input type="text" readonly />
+            </label>
           </div>
         </div>
       </section>
