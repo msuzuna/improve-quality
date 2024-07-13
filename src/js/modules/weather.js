@@ -307,7 +307,7 @@ export const weather = async () => {
       const weatherData = formatWeatherData(data);
       deleteBlockArea("data-weather-block", dataKey);
       createResultBlock(weatherData, dataKey);
-      requestButton.blur();
+      prefectureInputs[0].focus();
     });
   };
 
