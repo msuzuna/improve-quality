@@ -57,8 +57,8 @@ export const weather = async () => {
     const listElement = document.querySelector(`[data-weather-list=${key}]`);
     if (!(listElement instanceof HTMLElement)) return;
 
-    list?.forEach((listItem, index) => {
-      const id = `${key}${index}`;
+    list?.forEach((listItem) => {
+      const id = window.crypto.randomUUID();
       const li = document.createElement("li");
       const input = document.createElement("input");
       const label = document.createElement("label");
