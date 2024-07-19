@@ -11,7 +11,7 @@ exports.getWeatherInformation = onRequest(async (request, response) => {
   response.set("Access-Control-Allow-Headers", "Origin, Methods");
   response.set(
     "Access-Control-Allow-Origin",
-    "https://improve-quality.web.app",
+    "https://improve-quality.web.app"
   );
   response.set("Access-Control-Allow-Methods", "GET");
   if (data.ok) {
