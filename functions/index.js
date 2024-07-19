@@ -9,7 +9,10 @@ exports.getWeatherInformation = onRequest(async (request, response) => {
   const json = await data.json();
   logger.info("天気情報取得", { structuredData: true });
   response.set("Access-Control-Allow-Headers", "Origin, Methods");
-  response.set("Access-Control-Allow-Origin", "*");
+  response.set(
+    "Access-Control-Allow-Origin",
+    "getweatherinformation-afq4w33w3q-uc.a.run.app",
+  );
   response.set("Access-Control-Allow-Methods", "GET");
   response.send(json);
   response.end();
