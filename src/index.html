@@ -41,11 +41,53 @@
               現在の天気を調べる
             </button>
           </div>
-          <div class="weather-result-wrap" data-weather-block="result">
+          <div data-weather-block="default">
             <label
               >「現在の天気を調べる」ボタンを選択すると現在の天気が表示されます。
               <input type="text" readonly />
             </label>
+          </div>
+          <div
+            class="weather-result-wrap is-hidden"
+            data-weather-block="result"
+          >
+            <p data-weather-result="areaDescription">現在の天気</p>
+            <div class="weather-result-content">
+              <img
+                src=""
+                width="50"
+                height="50"
+                alt=""
+                data-weather-result="iconURL"
+              />
+              <span
+                class="weather-result-main"
+                data-weather-result="description"
+              ></span>
+              <dl class="weather-result-temp-wrap">
+                <div>
+                  <dt class="weather-result-temp">現在の気温</dt>
+                  <dd
+                    class="weather-result-temp"
+                    data-weather-result="temp"
+                  ></dd>
+                </div>
+                <div>
+                  <dt class="weather-result-temp">最高気温</dt>
+                  <dd
+                    class="weather-result-temp"
+                    data-weather-result="temp_max"
+                  ></dd>
+                </div>
+                <div>
+                  <dt class="weather-result-temp">最低気温</dt>
+                  <dd
+                    class="weather-result-temp"
+                    data-weather-result="temp_min"
+                  ></dd>
+                </div>
+              </dl>
+            </div>
           </div>
         </div>
       </section>

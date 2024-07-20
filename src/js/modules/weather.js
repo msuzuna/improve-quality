@@ -194,7 +194,7 @@ export const weather = async () => {
      * 天気情報を整形する関数
      * @function
      * @param {Object} data
-     * @returns {{areaName: string,iconURL: string, description: string,  temp: number, temp_min: number, temp_max: number}}
+     * @returns {{areaDescription: string,iconURL: string, description: string,  temp: number, temp_min: number, temp_max: number}}
      */
     const formatWeatherData = (data) => {
       /** @type {{name: string}} */
@@ -205,7 +205,7 @@ export const weather = async () => {
       /** @type {string} */
       const iconURL = `https://openweathermap.org/img/wn/${icon}@2x.png`;
       const weatherData = {
-        areaName,
+        areaDescription: `現在の${areaName}の天気`,
         iconURL,
         description,
         temp,
@@ -219,70 +219,29 @@ export const weather = async () => {
     /**
      * 天気の結果を表示させる関数
      * @function
-     * @param {{areaName: string,iconURL: string, description: string,  temp: number, temp_min: number, temp_max: number}} weatherData
+     * @param {{areaDescription: string,iconURL: string, description: string,  temp: number, temp_min: number, temp_max: number}} weatherData
      * @param {string} key
      * @returns {void} 返り値なし
      */
-    const createResultBlock = (weatherData, key) => {
+    const updateResultBlock = (weatherData, key) => {
       /** @type {HTMLDivElement | null} ボタンリストのElement */
       const weatherResultElement = document.querySelector(
         `[data-weather-block=${key}]`,
       );
       if (!(weatherResultElement instanceof HTMLElement)) return;
-      const { areaName, iconURL, description, temp, temp_min, temp_max } =
-        weatherData;
+      const dataResultProp = "data-weather-result";
+      /** @type {NodeListOf<HTMLElement>} 結果を表示させる要素リスト */
+      const resultElements = document.querySelectorAll(`[${dataResultProp}]`);
+      resultElements.forEach((resultElement) => {
+        const resultId = resultElement.getAttribute(dataResultProp);
+        if (resultId === "iconURL") {
+          resultElement.src = weatherData[resultId];
+        } else {
+          resultElement.innerText = weatherData[resultId];
+        }
+      });
 
-      const pTitle = document.createElement("p");
-      const divContent = document.createElement("div");
-      const img = document.createElement("img");
-      const spanWeather = document.createElement("span");
-      const dl = document.createElement("dl");
-      const divTemp = document.createElement("div");
-      const divTempMax = document.createElement("div");
-      const divTempMin = document.createElement("div");
-      const dtTemp = document.createElement("dt");
-      const dtTempMax = document.createElement("dt");
-      const dtTempMin = document.createElement("dt");
-      const ddTemp = document.createElement("dd");
-      const ddTempMax = document.createElement("dd");
-      const ddTempMin = document.createElement("dd");
-      const imageSize = 50;
-
-      pTitle.innerHTML = `現在の${areaName}の天気`;
-      divContent.classList.add("weather-result-content");
-      img.src = iconURL;
-      img.width = imageSize;
-      img.height = imageSize;
-      img.alt = "";
-      spanWeather.innerHTML = description;
-      spanWeather.classList.add("weather-result-main");
-      dl.classList.add("weather-result-temp-wrap");
-      dtTemp.classList.add("weather-result-temp");
-      dtTempMax.classList.add("weather-result-temp");
-      dtTempMin.classList.add("weather-result-temp");
-      dtTemp.innerHTML = "現在の気温";
-      dtTempMax.innerHTML = "最高気温";
-      dtTempMin.innerHTML = "最低気温";
-      ddTemp.classList.add("weather-result-temp");
-      ddTempMax.classList.add("weather-result-temp");
-      ddTempMin.classList.add("weather-result-temp");
-      ddTemp.innerHTML = temp;
-      ddTempMax.innerHTML = temp_max;
-      ddTempMin.innerHTML = temp_min;
-      divTemp.appendChild(dtTemp);
-      divTemp.appendChild(ddTemp);
-      divTempMax.appendChild(dtTempMax);
-      divTempMax.appendChild(ddTempMax);
-      divTempMin.appendChild(dtTempMin);
-      divTempMin.appendChild(ddTempMin);
-      dl.appendChild(divTemp);
-      dl.appendChild(divTempMax);
-      dl.appendChild(divTempMin);
-      divContent.appendChild(img);
-      divContent.appendChild(spanWeather);
-      divContent.appendChild(dl);
-      weatherResultElement.appendChild(pTitle);
-      weatherResultElement.appendChild(divContent);
+      weatherResultElement.classList.remove("is-hidden");
     };
 
     requestButton.addEventListener("click", async () => {
@@ -301,8 +260,11 @@ export const weather = async () => {
       /** @type {Object} 天気データが格納されたオブジェクト */
       const data = await fetchData(url);
       const weatherData = formatWeatherData(data);
-      deleteBlockArea("data-weather-block", dataKey);
-      createResultBlock(weatherData, dataKey);
+      const defaultBlock = document.querySelector(
+        "[data-weather-block=default]",
+      );
+      updateResultBlock(weatherData, dataKey);
+      defaultBlock?.classList.add("is-hidden");
       prefectureInputs[0].focus();
     });
   };
