@@ -1,0 +1,7 @@
+html:has(dialog[open]) {
+  overflow: hidden;
+}
+
+.modal-content {
+  padding: 20px;
+}

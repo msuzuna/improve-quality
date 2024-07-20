@@ -91,6 +91,28 @@
       <section class="section">
         <div class="section-inner">
           <h2>映画のポスター</h2>
+          <div class="button-wrap">
+            <button
+              type="button"
+              class="button-submit"
+              data-modal-open="movie-poster"
+            >
+              映画のポスターを表示する
+            </button>
+          </div>
+          <dialog id="movie-poster">
+            <div class="modal-content" data-modal-content="movie-poster">
+              <div class="button-wrap">
+                <button
+                  type="button"
+                  class="button"
+                  data-modal-close="movie-poster"
+                >
+                  閉じる
+                </button>
+              </div>
+            </div>
+          </dialog>
         </div>
       </section>
       <section class="section">

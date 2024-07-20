@@ -21,6 +21,10 @@ menu {
   list-style: none;
 }
 
+dialog {
+  padding: 0;
+}
+
 dt {
   font-weight: normal;
 }
