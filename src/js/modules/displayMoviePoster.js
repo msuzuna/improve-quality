@@ -9,6 +9,36 @@ import { fetchData } from "./fetch.js";
 export const displayMoviePoster = () => {
   /** @type {string} */
   const url = "https://getmovieinformation-afq4w33w3q-uc.a.run.app/";
+
+  /**
+   * 次のページ数を取得する関数を生成する関数
+   * @async
+   * @function
+   * @returns {Function} 次のページ数を取得する関数
+   */
+  const getNextIndexFactory = async () => {
+    /** @type {Object} 映画情報が格納されたオブジェクト */
+    const defaultData = await fetchData(url);
+    /** @type {{ page: number, total_pages: number}} */
+    const { page: defaultPage, total_pages: totalPages } = defaultData;
+    let currentPageIndex = defaultPage;
+
+    /**
+     * 次のページ数を取得する
+     * @function
+     * @returns {number}
+     */
+    const getNextIndex = () => {
+      if (currentPageIndex === totalPages) {
+        currentPageIndex = defaultPage;
+      } else {
+        currentPageIndex += 1;
+      }
+      return currentPageIndex;
+    };
+    return getNextIndex;
+  };
+
   /**
    * 映画のポスターを取得し、映画ポスター要素を生成する関数
    * @function
