@@ -31,7 +31,7 @@ import { fetchData } from "./fetch.js";
  */
 export const displayMoviePoster = async () => {
   const observationTrigger = document.querySelector(
-    "[data-modal-open='movie-poster']",
+    "[data-modal-open='movie-poster']"
   );
   if (!(observationTrigger instanceof HTMLButtonElement)) return;
 
@@ -140,8 +140,8 @@ export const displayMoviePoster = async () => {
       },
       {
         root: scrollArea,
-        threshold: 0
-      },
+        threshold: 0,
+      }
     );
 
     observationTrigger.addEventListener("click", () => {
