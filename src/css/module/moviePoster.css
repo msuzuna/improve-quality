@@ -1,0 +1,5 @@
+.movie-poster-wrap {
+  display: grid;
+  grid-template-columns: 100px 100px 100px 100px;
+  gap: 20px;
+}
