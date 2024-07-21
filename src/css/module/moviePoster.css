@@ -3,3 +3,7 @@
   grid-template-columns: 100px 100px 100px 100px;
   gap: 20px;
 }
+
+.movie-poster-end {
+  padding: 1px 0;
+}

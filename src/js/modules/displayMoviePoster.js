@@ -70,5 +70,61 @@ export const displayMoviePoster = () => {
       posterBlock.appendChild(img);
     });
   };
+
+  /**
+   * 監視を開始する関数
+   * @function
+   * @returns {void}
+   */
+  const startObservation = async () => {
+    /** @type {HTMLElement | null} */
+    const scrollArea = document.getElementById("movie-poster");
+    /** @type {HTMLElement | null} */
+    const target = document.querySelector("[data-movie='end']");
+    /** @type {HTMLElement | null} */
+    const observationTrigger = document.querySelector(
+      "[data-modal-open='movie-poster']",
+    );
+    if (
+      !(scrollArea instanceof HTMLElement) ||
+      !(target instanceof HTMLElement) ||
+      !(observationTrigger instanceof HTMLElement)
+    )
+      return;
+
+    /** @type {{root: HTMLElement, threshold: number}} */
+    const options = {
+      root: scrollArea,
+      threshold: 0,
+    };
+
+    /** @type {Function} */
+    const nextIndex = await getNextIndexFactory();
+
+    /**
+     * オブザーバーの引数に設定するコールバック関数
+     * @function
+     * @param {IntersectionObserverEntry} entries
+     * @returns {void}
+     */
+    const infiniteScroll = (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          createPosterElement(nextIndex());
+        }
+      });
+    };
+    /** @type {IntersectionObserver} */
+    const intersectionObserver = new IntersectionObserver(
+      infiniteScroll,
+      options,
+    );
+
+    observationTrigger.addEventListener("click", () => {
+      intersectionObserver.observe(target);
+    });
+  };
+
   createPosterElement();
+  startObservation();
 };
