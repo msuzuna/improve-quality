@@ -1,4 +1,5 @@
 import { fetchData } from "./fetch.js";
+import { switchButtonDisable } from "./switchButtonDisable.js";
 
 /**
  * 映画APIを利用して現在放映されている映画のポスターを表示させる
@@ -6,54 +7,55 @@ import { fetchData } from "./fetch.js";
  * @function
  * @returns {void} 返り値なし
  */
-export const displayMoviePoster = () => {
+export const displayMoviePoster = async () => {
+  /** @type {HTMLButtonElement | null} */
+  const observationTrigger = document.querySelector(
+    "[data-modal-open='movie-poster']",
+  );
+  /** @type {boolean | null} */
+  const isButtonDisabled = observationTrigger?.disabled;
+  // モーダルを開くボタンとモーダルの中身のidが一致しない場合モーダルが開かないため、早期リターン
+  if (!(observationTrigger instanceof HTMLButtonElement) || isButtonDisabled)
+    return;
+
+  /** @type {Function} */
+  const { inactivateButton } = switchButtonDisable(observationTrigger);
+
+  /** @type {HTMLElement | null} */
+  const posterBlock = document.querySelector("[data-movie='block']");
+  if (!(posterBlock instanceof HTMLElement)) {
+    inactivateButton();
+    return;
+  }
+
   /** @type {string} */
   const url = "https://getmovieinformation-afq4w33w3q-uc.a.run.app/";
-
-  /**
-   * 次のページ数を取得する関数を生成する関数
-   * @async
-   * @function
-   * @returns {Function} 次のページ数を取得する関数
-   */
-  const getNextIndexFactory = async () => {
-    /** @type {Object} 映画情報が格納されたオブジェクト */
-    const defaultData = await fetchData(url);
-    /** @type {{ page: number, total_pages: number}} */
-    const { page: defaultPage, total_pages: totalPages } = defaultData;
-    let currentPageIndex = defaultPage;
-
-    /**
-     * 次のページ数を取得する
-     * @function
-     * @returns {number}
-     */
-    const getNextIndex = () => {
-      if (currentPageIndex === totalPages) {
-        currentPageIndex = defaultPage;
-      } else {
-        currentPageIndex += 1;
-      }
-      return currentPageIndex;
-    };
-    return getNextIndex;
-  };
+  /** @type {Object} 映画情報が格納されたオブジェクト */
+  const defaultData = await fetchData(url);
+  /** @type {{ page: number | undefined, total_pages: number | undefined}} */
+  const { page: defaultPage, total_pages: totalPages } = defaultData;
+  // 通信がうまくいかなかったなど、必要な情報が得られなかった場合は早期リターン
+  if (defaultPage === undefined || totalPages === undefined) {
+    inactivateButton();
+    return;
+  }
 
   /**
    * 映画のポスターを取得し、映画ポスター要素を生成する関数
+   * @async
    * @function
    * @param {number} pageIndex
    * @returns {void}
    */
   const createPosterElement = async (pageIndex = 1) => {
-    /** @type {HTMLElement | null} */
-    const posterBlock = document.querySelector("[data-movie='block']");
-    if (!(posterBlock instanceof HTMLElement)) return;
-
     /** @type {Object} 映画情報が格納されたオブジェクト */
     const data = await fetchData(`${url}?page=${pageIndex}`);
-    /** @type {{results: Array<Object>}} */
+    /** @type {{results: Array<Object> | undefined}} */
     const { results } = data;
+    if (results === undefined) {
+      inactivateButton();
+      return;
+    }
 
     results.forEach((result) => {
       /** @type {{poster_path: string | null, title: string}} */
@@ -74,23 +76,25 @@ export const displayMoviePoster = () => {
   /**
    * 監視を開始する関数
    * @function
+   * @param {number} defaultPageIndex
+   * @param {number} totalPageIndex
    * @returns {void}
    */
-  const startObservation = async () => {
+  const startObservation = (defaultPageIndex, totalPageIndex) => {
     /** @type {HTMLElement | null} */
     const scrollArea = document.getElementById("movie-poster");
     /** @type {HTMLElement | null} */
     const target = document.querySelector("[data-movie='end']");
-    /** @type {HTMLElement | null} */
-    const observationTrigger = document.querySelector(
-      "[data-modal-open='movie-poster']",
-    );
-    if (
-      !(scrollArea instanceof HTMLElement) ||
-      !(target instanceof HTMLElement) ||
-      !(observationTrigger instanceof HTMLElement)
-    )
+
+    /**
+     * scrollAreaは以下の理由からnullチェック不要
+     * モーダルを開くボタンをモーダルコンテンツでIDが違う場合はすでにreturnされている
+     * モーダルを開くボタンのdata属性がmovie-posterではない場合はすでにreturnされている
+     */
+    if (!(target instanceof HTMLElement)) {
+      inactivateButton();
       return;
+    }
 
     /** @type {{root: HTMLElement, threshold: number}} */
     const options = {
@@ -98,8 +102,34 @@ export const displayMoviePoster = () => {
       threshold: 0,
     };
 
+    /**
+     * 次のページ数を取得する関数を生成する関数
+     * @function
+     * @param {number} defaultPageIndex
+     * @param {number} totalPageIndex
+     * @returns {Function | undefined} 次のページ数を取得する関数
+     */
+    const getNextIndexFactory = (defaultPageIndex, totalPageIndex) => {
+      let currentPageIndex = defaultPageIndex;
+
+      /**
+       * 次のページ数を取得する
+       * @function
+       * @returns {number}
+       */
+      const getNextIndex = () => {
+        if (currentPageIndex === totalPageIndex) {
+          currentPageIndex = defaultPageIndex;
+        } else {
+          currentPageIndex += 1;
+        }
+        return currentPageIndex;
+      };
+      return getNextIndex;
+    };
+
     /** @type {Function} */
-    const nextIndex = await getNextIndexFactory();
+    const nextIndex = getNextIndexFactory(defaultPageIndex, totalPageIndex);
 
     /**
      * オブザーバーの引数に設定するコールバック関数
@@ -114,6 +144,7 @@ export const displayMoviePoster = () => {
         }
       });
     };
+
     /** @type {IntersectionObserver} */
     const intersectionObserver = new IntersectionObserver(
       infiniteScroll,
@@ -126,5 +157,5 @@ export const displayMoviePoster = () => {
   };
 
   createPosterElement();
-  startObservation();
+  startObservation(defaultPage, totalPages);
 };

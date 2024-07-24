@@ -1,3 +1,5 @@
+import { switchButtonDisable } from "./switchButtonDisable.js";
+
 /**
  * モーダルの表示非表示を行う
  * @function
@@ -10,13 +12,17 @@ export const toggleModal = () => {
    * @returns {void} 返り値なし
    */
   const showModal = () => {
-    /** @type {NodeListOf<HTMLElement>} モーダルを開くトリガー要素リスト */
+    /** @type {NodeListOf<HTMLButtonElement>} モーダルを開くトリガー要素リスト */
     const openTriggers = document.querySelectorAll("[data-modal-open]");
 
     openTriggers.forEach((openTrigger) => {
+      const { inactivateButton } = switchButtonDisable(openTrigger);
       const id = openTrigger.getAttribute("data-modal-open");
       const target = document.getElementById(id);
-      if (!(target instanceof HTMLElement)) return;
+      if (!(target instanceof HTMLElement)) {
+        inactivateButton();
+        return;
+      }
 
       openTrigger.addEventListener("click", () => {
         target.showModal();
@@ -30,7 +36,7 @@ export const toggleModal = () => {
    * @returns {void} 返り値なし
    */
   const closeModal = () => {
-    /** @type {NodeListOf<HTMLElement>} モーダルを開くトリガー要素リスト */
+    /** @type {NodeListOf<HTMLButtonElement>} モーダルを開くトリガー要素リスト */
     const closeTriggers = document.querySelectorAll("[data-modal-close]");
 
     closeTriggers.forEach((closeTrigger) => {
