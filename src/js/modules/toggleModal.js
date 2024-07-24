@@ -1,3 +1,5 @@
+import { switchButtonDisable } from "./switchButtonDisable.js";
+
 /**
  * モーダルの表示非表示を行う
  */
