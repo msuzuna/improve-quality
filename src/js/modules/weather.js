@@ -30,13 +30,13 @@ export const weather = async () => {
   /**
    * ブロックを削除する関数
    * @function
-   * @param {string} dataProps
-   * @param {string} key
+   * @param {string} dataKey
+   * @param {string} dataValue
    * @returns {void} 返り値なし
    */
-  const deleteBlockArea = (dataProps, key) => {
+  const deleteBlockArea = (dataKey, dataValue) => {
     /** @type {HTMLMenuElement | null} ボタンリストのElement */
-    const blockElement = document.querySelector(`[${dataProps}="${key}"]`);
+    const blockElement = document.querySelector(`[${dataKey}="${dataValue}"]`);
     if (!(blockElement instanceof HTMLMenuElement)) return;
     blockElement.innerHTML = "";
   };
@@ -220,20 +220,20 @@ export const weather = async () => {
      * 天気の結果を表示させる関数
      * @function
      * @param {{areaDescription: string,iconURL: string, description: string,  temp: number, temp_min: number, temp_max: number}} weatherData
-     * @param {string} key
+     * @param {string} dataValue
      * @returns {void} 返り値なし
      */
-    const updateResultBlock = (weatherData, key) => {
+    const updateResultBlock = (weatherData, dataValue) => {
       /** @type {HTMLDivElement | null} ボタンリストのElement */
       const weatherResultElement = document.querySelector(
-        `[data-weather-block=${key}]`,
+        `[data-weather-block=${dataValue}]`,
       );
       if (!(weatherResultElement instanceof HTMLDivElement)) return;
-      const dataResultProp = "data-weather-result";
+      const dataResultKey = "data-weather-result";
       /** @type {NodeListOf<HTMLElement>} 結果を表示させる要素リスト */
-      const resultElements = document.querySelectorAll(`[${dataResultProp}]`);
+      const resultElements = document.querySelectorAll(`[${dataResultKey}]`);
       resultElements.forEach((resultElement) => {
-        const resultId = resultElement.getAttribute(dataResultProp);
+        const resultId = resultElement.getAttribute(dataResultKey);
         if (resultId === "iconURL") {
           resultElement.src = weatherData[resultId];
         } else {
