@@ -1,5 +1,4 @@
 import { fetchData } from "./fetch.js";
-import { switchButtonDisable } from "./switchButtonDisable.js";
 
 /**
  * @typedef {Object} Result
