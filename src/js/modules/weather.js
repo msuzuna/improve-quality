@@ -35,9 +35,9 @@ export const weather = async () => {
    * @returns {void} 返り値なし
    */
   const deleteBlockArea = (dataProps, key) => {
-    /** @type {HTMLElement | null} ボタンリストのElement */
+    /** @type {HTMLMenuElement | null} ボタンリストのElement */
     const blockElement = document.querySelector(`[${dataProps}="${key}"]`);
-    if (!(blockElement instanceof HTMLElement)) return;
+    if (!(blockElement instanceof HTMLMenuElement)) return;
     blockElement.innerHTML = "";
   };
 
@@ -51,7 +51,7 @@ export const weather = async () => {
     const { key, list } = areaData;
     /** @type {HTMLMenuElement | null} ボタンリストのElement */
     const listElement = document.querySelector(`[data-weather-list=${key}]`);
-    if (!(listElement instanceof HTMLElement)) return;
+    if (!(listElement instanceof HTMLMenuElement)) return;
 
     list?.forEach((listItem) => {
       const id = window.crypto.randomUUID();
@@ -144,7 +144,7 @@ export const weather = async () => {
   const switchActiveRequestButton = (regionData, prefectureRowData) => {
     /** @type {HTMLButtonElement | null} */
     const requestButton = document.querySelector("[data-weather-request]");
-    if (!(requestButton instanceof HTMLElement)) return;
+    if (!(requestButton instanceof HTMLButtonElement)) return;
     const { key: regionKey } = regionData;
     const { key: prefectureKey } = prefectureRowData;
     /** @type {NodeListOf<HTMLInputElement>} */
@@ -174,7 +174,7 @@ export const weather = async () => {
     const dataKey = "result";
     /** @type {HTMLButtonElement | null} */
     const requestButton = document.querySelector("[data-weather-request]");
-    if (!(requestButton instanceof HTMLElement)) return;
+    if (!(requestButton instanceof HTMLButtonElement)) return;
 
     /**
      * 都道府県の日本語から英語を取得する関数
@@ -228,7 +228,7 @@ export const weather = async () => {
       const weatherResultElement = document.querySelector(
         `[data-weather-block=${key}]`,
       );
-      if (!(weatherResultElement instanceof HTMLElement)) return;
+      if (!(weatherResultElement instanceof HTMLDivElement)) return;
       const dataResultProp = "data-weather-result";
       /** @type {NodeListOf<HTMLElement>} 結果を表示させる要素リスト */
       const resultElements = document.querySelectorAll(`[${dataResultProp}]`);
