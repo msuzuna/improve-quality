@@ -241,7 +241,7 @@ export const weather = async () => {
         }
       });
 
-      weatherResultElement.classList.remove("is-hidden");
+      weatherResultElement.hidden = false;
     };
 
     requestButton.addEventListener("click", async () => {
@@ -260,11 +260,14 @@ export const weather = async () => {
       /** @type {Object} 天気データが格納されたオブジェクト */
       const data = await fetchData(url);
       const weatherData = formatWeatherData(data);
+      /** @type {HTMLDivElement | null} */
       const defaultBlock = document.querySelector(
         "[data-weather-block=default]",
       );
       updateResultBlock(weatherData, dataKey);
-      defaultBlock?.classList.add("is-hidden");
+      if (defaultBlock instanceof HTMLDivElement) {
+        defaultBlock.hidden = true;
+      }
       prefectureInputs[0].focus();
     });
   };
