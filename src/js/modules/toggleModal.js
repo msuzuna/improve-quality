@@ -1,5 +1,3 @@
-import { switchButtonDisable } from "./switchButtonDisable.js";
-
 /**
  * モーダルの表示非表示を行う
  * @function
@@ -16,11 +14,10 @@ export const toggleModal = () => {
     const openTriggers = document.querySelectorAll("[data-modal-open]");
 
     openTriggers.forEach((openTrigger) => {
-      const { inactivateButton } = switchButtonDisable(openTrigger);
       const id = openTrigger.getAttribute("data-modal-open");
       const target = document.getElementById(id);
       if (!(target instanceof HTMLElement)) {
-        inactivateButton();
+        openTrigger.disabled = true;
         return;
       }
 

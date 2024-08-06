@@ -1,5 +1,4 @@
 import { fetchData } from "./fetch.js";
-import { switchButtonDisable } from "./switchButtonDisable.js";
 
 /**
  * 映画APIを利用して現在放映されている映画のポスターを表示させる
@@ -18,13 +17,10 @@ export const displayMoviePoster = async () => {
   if (!(observationTrigger instanceof HTMLButtonElement) || isButtonDisabled)
     return;
 
-  /** @type {Function} */
-  const { inactivateButton } = switchButtonDisable(observationTrigger);
-
   /** @type {HTMLElement | null} */
   const posterBlock = document.querySelector("[data-movie='block']");
   if (!(posterBlock instanceof HTMLElement)) {
-    inactivateButton();
+    observationTrigger.disabled = true;
     return;
   }
 
@@ -36,7 +32,7 @@ export const displayMoviePoster = async () => {
   const { page: defaultPage, total_pages: totalPages } = defaultData;
   // 通信がうまくいかなかったなど、必要な情報が得られなかった場合は早期リターン
   if (defaultPage === undefined || totalPages === undefined) {
-    inactivateButton();
+    observationTrigger.disabled = true;
     return;
   }
 
@@ -53,7 +49,7 @@ export const displayMoviePoster = async () => {
     /** @type {{results: Array<Object> | undefined}} */
     const { results } = data;
     if (results === undefined) {
-      inactivateButton();
+      observationTrigger.disabled = true;
       return;
     }
 
@@ -92,7 +88,7 @@ export const displayMoviePoster = async () => {
      * モーダルを開くボタンのdata属性がmovie-posterではない場合はすでにreturnされている
      */
     if (!(target instanceof HTMLElement)) {
-      inactivateButton();
+      observationTrigger.disabled = true;
       return;
     }
 
