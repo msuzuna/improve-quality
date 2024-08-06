@@ -53,6 +53,9 @@ export const weather = async () => {
     const listElement = document.querySelector(`[data-weather-list=${key}]`);
     if (!(listElement instanceof HTMLMenuElement)) return;
 
+    /** @type {DocumentFragment} */
+    const fragment = new DocumentFragment();
+
     list?.forEach((listItem) => {
       const id = window.crypto.randomUUID();
       const li = document.createElement("li");
@@ -67,8 +70,10 @@ export const weather = async () => {
       label.innerText = listItem;
       li.appendChild(input);
       li.appendChild(label);
-      listElement.appendChild(li);
+      fragment.append(li);
     });
+
+    listElement.append(fragment);
   };
 
   /**
