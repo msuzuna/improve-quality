@@ -234,7 +234,9 @@ export const weather = async () => {
       const resultElements = document.querySelectorAll(`[${dataResultKey}]`);
       resultElements.forEach((resultElement) => {
         const resultId = resultElement.getAttribute(dataResultKey);
-        if (resultId === "iconURL") {
+        if (resultId === "") {
+          return;
+        } else if (resultId === "iconURL") {
           resultElement.src = weatherData[resultId];
         } else {
           resultElement.innerText = weatherData[resultId];
