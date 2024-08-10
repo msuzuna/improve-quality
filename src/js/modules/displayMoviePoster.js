@@ -53,6 +53,9 @@ export const displayMoviePoster = async () => {
       return;
     }
 
+    /** @type {DocumentFragment} */
+    const fragment = new DocumentFragment();
+
     results.forEach((result) => {
       /** @type {{poster_path: string | null, title: string}} */
       const { poster_path, title } = result;
@@ -65,8 +68,10 @@ export const displayMoviePoster = async () => {
       img.alt = title;
       img.width = imgWidth;
       img.height = imgHeight;
-      posterBlock.appendChild(img);
+      fragment.append(img);
     });
+
+    posterBlock.append(fragment);
   };
 
   /**
