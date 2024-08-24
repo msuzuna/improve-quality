@@ -51,8 +51,8 @@ export const createSelectBlock = (areaData, dataKey) => {
 /**
  * 都道府県ボタンのElementを作成する関数
  * @function
- * @param {{key: string, description: string, list: Array<string>}} regionData
- * @param {{key: string, description: string, prefectureList: Array<{name: string, ja:string, region: string}>}} prefectureRowData
+ * @param {{key: string,  list: Array<string>}} regionData
+ * @param {{key: string,  prefectureList: Array<{name: string | null, id: string| null, ja:string, region: string}>}} prefectureRowData
  * @param {string} dataKey
  * @returns {void} 返り値なし
  */
@@ -83,15 +83,14 @@ export const updatePrefectureBlock = (
   /**
    * 都道県データを整形する関数
    * @function
-   * @param {{key: string, description: string, prefectureList: Array<{name: string, ja:string, region: string}>}} prefectureRowData
+   * @param {{key: string, prefectureList: Array<{name: string, ja:string, region: string}>}} prefectureRowData
    * @param {Array<string>} matchList
-   * @returns {{key: string, description: string, list: Array<string>}}
+   * @returns {{key: string, list: Array<string>}}
    */
   const formatPrefectureData = (prefectureRowData, matchList) => {
-    const { key, description } = prefectureRowData;
+    const { key } = prefectureRowData;
     const formatData = {
       key: key,
-      description: description,
       list: matchList,
     };
     return formatData;
