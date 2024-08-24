@@ -60,7 +60,7 @@ export const updateSelectBlock = (categoryData, optionRowData, dataKey) => {
    */
   const getMatchList = (categoryName, optionList) => {
     const matchList = optionList.filter(
-      (item) => item.category === categoryName,
+      (item) => item.category === categoryName
     );
     return matchList;
   };
