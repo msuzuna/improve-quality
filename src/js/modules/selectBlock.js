@@ -22,7 +22,7 @@ export const createSelectBlock = (optionData, dataKey) => {
   const fragment = new DocumentFragment();
 
   list?.forEach((listItem) => {
-    const id = window.crypto.randomUUID();
+    const id = listItem.id ?? window.crypto.randomUUID();
     const li = document.createElement("li");
     const input = document.createElement("input");
     const label = document.createElement("label");
