@@ -1,5 +1,6 @@
 import { cityData } from "../data/city.js";
 import { fetchData } from "./fetch.js";
+import { createSelectBlock } from "./createSelectBlock.js";
 
 /**
  * @typedef {Object} WeatherJson
@@ -74,7 +75,7 @@ export const weather = async () => {
    * @param {{key: string, list: Array<string>}} regionData
    * @param {{key: string, prefectureList: Array<{name: string, ja:string, region: string}>}} prefectureRowData
    */
-  const updatePrefectureBlock = (regionData, prefectureRowData) => {
+  const updatePrefectureBlock = (regionData, prefectureRowData, dataKey) => {
     const { key: regionKey } = regionData;
     const { key: prefectureKey, prefectureList } = prefectureRowData;
     const regionInputs = document.getElementsByName(regionKey);
@@ -118,7 +119,7 @@ export const weather = async () => {
           prefectureNameList
         );
         deleteBlockArea("data-weather-list", prefectureKey);
-        createSelectBlock(prefectureData);
+        createSelectBlock(prefectureData, dataKey);
       });
     });
   };
@@ -165,7 +166,7 @@ export const weather = async () => {
      */
     const getPrefectureEn = (prefectureJa, prefectureList) => {
       const prefectureEn = prefectureList.find(
-        (prefecture) => prefecture.ja === prefectureJa,
+        (prefecture) => prefecture.ja === prefectureJa
       )?.name;
       return prefectureEn;
     };
@@ -198,7 +199,7 @@ export const weather = async () => {
      */
     const updateResultBlock = (weatherData, dataValue) => {
       const weatherResultElement = document.querySelector(
-        `[data-weather-block=${dataValue}]`,
+        `[data-weather-block=${dataValue}]`
       );
       if (!(weatherResultElement instanceof HTMLDivElement)) return;
       const dataResultKey = "data-weather-result";
@@ -253,6 +254,7 @@ export const weather = async () => {
     });
   };
 
+  const dataKey = "weather";
   const { region: regionData, prefecture: prefectureRowData } = cityData;
 
   createSelectBlock(regionData);
