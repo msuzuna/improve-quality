@@ -1,4 +1,18 @@
 /**
+ * ブロックを削除する関数
+ * @function
+ * @param {string} dataKey
+ * @param {string} dataValue
+ * @returns {void} 返り値なし
+ */
+export const deleteAreaBlock = (dataKey, dataValue) => {
+  /** @type {HTMLMenuElement | null} ボタンリストのElement */
+  const blockElement = document.querySelector(`[${dataKey}="${dataValue}"]`);
+  if (!(blockElement instanceof HTMLMenuElement)) return;
+  blockElement.innerHTML = "";
+};
+
+/**
  * 地域ボタンのElementを作成する関数
  * @function
  * @param {{key: string, list: Array<string>}} areaData

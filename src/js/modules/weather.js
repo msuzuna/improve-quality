@@ -1,6 +1,6 @@
 import { cityData } from "../data/city.js";
 import { fetchData } from "./fetch.js";
-import { createSelectBlock } from "./createSelectBlock.js";
+import { deleteAreaBlock, createSelectBlock } from "./selectBlock.js";
 
 /**
  * @typedef {Object} WeatherJson
@@ -28,48 +28,6 @@ import { createSelectBlock } from "./createSelectBlock.js";
  * 天気APIを利用して現在の天気を取得し、ブラウザに表示させる関数
  */
 export const weather = async () => {
-  /**
-   * ブロックを削除する関数
-   * @param {string} dataKey
-   * @param {string} dataValue
-   */
-  const deleteBlockArea = (dataKey, dataValue) => {
-    const blockElement = document.querySelector(`[${dataKey}="${dataValue}"]`);
-    if (!(blockElement instanceof HTMLMenuElement)) return;
-    blockElement.innerHTML = "";
-  };
-
-  /**
-   * 地域ボタンのElementを作成する関数
-   * @param {{key: string, list: Array<string>}} areaData
-   */
-  const createSelectBlock = (areaData) => {
-    const { key, list } = areaData;
-    const listElement = document.querySelector(`[data-weather-list=${key}]`);
-    if (!(listElement instanceof HTMLMenuElement)) return;
-
-    const fragment = new DocumentFragment();
-
-    list?.forEach((listItem) => {
-      const id = window.crypto.randomUUID();
-      const li = document.createElement("li");
-      const input = document.createElement("input");
-      const label = document.createElement("label");
-      li.classList.add("input-wrap");
-      input.type = "radio";
-      input.name = key;
-      input.value = listItem;
-      input.id = id;
-      label.htmlFor = id;
-      label.innerText = listItem;
-      li.appendChild(input);
-      li.appendChild(label);
-      fragment.append(li);
-    });
-
-    listElement.append(fragment);
-  };
-
   /**
    * 都道府県ボタンのElementを作成する関数
    * @param {{key: string, list: Array<string>}} regionData
@@ -118,7 +76,7 @@ export const weather = async () => {
           prefectureRowData,
           prefectureNameList
         );
-        deleteBlockArea("data-weather-list", prefectureKey);
+        deleteAreaBlock("data-weather-list", prefectureKey);
         createSelectBlock(prefectureData, dataKey);
       });
     });
