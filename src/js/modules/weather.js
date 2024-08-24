@@ -1,6 +1,6 @@
 import { cityData } from "../data/city.js";
 import { fetchData } from "./fetch.js";
-import { createSelectBlock, updatePrefectureBlock } from "./selectBlock.js";
+import { createSelectBlock, updateSelectBlock } from "./selectBlock.js";
 
 /**
  * @typedef {Object} WeatherJson

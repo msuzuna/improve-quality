@@ -5,7 +5,7 @@
  * @param {string} dataValue
  * @returns {void} 返り値なし
  */
-const deleteAreaBlock = (dataKey, dataValue) => {
+const deleteSelectBlock = (dataKey, dataValue) => {
   /** @type {HTMLMenuElement | null} ボタンリストのElement */
   const blockElement = document.querySelector(`[${dataKey}="${dataValue}"]`);
   if (!(blockElement instanceof HTMLMenuElement)) return;
@@ -15,12 +15,12 @@ const deleteAreaBlock = (dataKey, dataValue) => {
 /**
  * 地域ボタンのElementを作成する関数
  * @function
- * @param {{key: string, list: Array<{name: string | null, value: string | null, ja: string, region: string}>}} areaData
+ * @param {{key: string, list: Array<{value: string | null, ja: string}>}} optionData
  * @param {string} dataKey
  * @returns {void} 返り値なし
  */
-export const createSelectBlock = (areaData, dataKey) => {
-  const { key, list } = areaData;
+export const createSelectBlock = (optionData, dataKey) => {
+  const { key, list } = optionData;
   /** @type {HTMLMenuElement | null} ボタンリストのElement */
   const listElement = document.querySelector(`[data-${dataKey}-list=${key}]`);
   if (!(listElement instanceof HTMLMenuElement)) return;
@@ -51,43 +51,52 @@ export const createSelectBlock = (areaData, dataKey) => {
 /**
  * 都道府県ボタンのElementを作成する関数
  * @function
- * @param {{key: string, list: Array<string>}} regionData
- * @param {{key: string, prefectureList: Array<{name: string, ja:string, region: string}> | null, cityList: Array<{value: string, ja:string, region: string}> | null}} areaRowData
+ * @param {{key: string, list: Array<{value: string | null, ja: string}>}} categoryData
+ * @param {{key: string, list: Array<{name: string | null, value: string | null, ja:string, category: string}> }} optionRowData
  * @param {string} dataKey
  * @returns {void} 返り値なし
  */
-export const updatePrefectureBlock = (regionData, areaRowData, dataKey) => {
-  const { key: regionKey } = regionData;
-  const { key: prefectureKey, prefectureList, cityList } = areaRowData;
-  const areaRowList = prefectureList ?? cityList;
-  if (!areaRowList) return;
+export const updateSelectBlock = (categoryData, optionRowData, dataKey) => {
+  const { key: categoryKey } = categoryData;
+  const { key: optionKey, list } = optionRowData;
+
   /** @type {NodeListOf<HTMLInputElement>} */
-  const regionInputs = document.getElementsByName(`${regionKey}-${dataKey}`);
+  const regionInputs = document.getElementsByName(`${categoryKey}-${dataKey}`);
 
   /**
    * 地域に合致する都道府県の一覧を返す関数
    * @function
-   * @param {string} regionName
-   * @param {Array<{name: string | null, value: string | null, ja:string, region: string}>} areaList
-   * @returns {Array<{name: string | null, value: string | null, ja:string, region: string}>}
+   * @param {string} categoryName
+   * @param {Array<{name: string | null, value: string | null, ja:string, category: string}>} optionList
+   * @returns {Array<{name: string | null, value: string | null, ja:string, category: string}>}
    */
-  const getMatchList = (regionName, areaList) => {
-    const matchList = areaList.filter((area) => area.region === regionName);
+  const getMatchList = (categoryName, optionList) => {
+    const matchList = optionList.filter(
+      (item) => item.category === categoryName,
+    );
     return matchList;
   };
 
   /**
    * 都道県データを整形する関数
    * @function
-   * @param {{key: string, areaRowList: Array<{name: string, ja:string, region: string}>}} areaRowData
-   * @param {Array<{name: string | null, value: string|null, ja:string, region: string}>} matchList
-   * @returns {{key: string, list: Array<{name: string | null, value: string | null ja:string, region: string}>}}
+   * @param {string} optionKey
+   * @param {Array<{name: string | null, value: string | null, ja:string, category: string}>} matchList
+   * @returns {{key: string, list: Array<{value: string | null, ja:string}>}}
    */
-  const formatAreaData = (areaRowData, matchList) => {
-    const { key } = areaRowData;
+  const formatData = (optionKey, matchList) => {
+    const formatList = [];
+    matchList.forEach((item) => {
+      const obj = {};
+      if (item.value) {
+        obj.value = item.value;
+      }
+      obj.ja = item.ja;
+      formatList.push(obj);
+    });
     const formatData = {
-      key: key,
-      list: matchList,
+      key: optionKey,
+      list: formatList,
     };
     return formatData;
   };
@@ -97,13 +106,13 @@ export const updatePrefectureBlock = (regionData, areaRowData, dataKey) => {
       const targetInput = event.target;
       if (!(targetInput instanceof EventTarget)) return;
       /** @type {string} */
-      const regionName = targetInput.value;
-      if (regionName === "") return;
+      const categoryName = targetInput.value;
+      if (categoryName === "") return;
 
-      const regionMatchAreaList = getMatchList(regionName, areaRowList);
-      const prefectureData = formatAreaData(areaRowData, regionMatchAreaList);
-      deleteAreaBlock(`data-${dataKey}-list`, prefectureKey);
-      createSelectBlock(prefectureData, dataKey);
+      const matchList = getMatchList(categoryName, list);
+      const formattedData = formatData(optionKey, matchList);
+      deleteSelectBlock(`data-${dataKey}-list`, optionKey);
+      createSelectBlock(formattedData, dataKey);
     });
   });
 };
