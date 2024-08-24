@@ -15,7 +15,7 @@ const deleteAreaBlock = (dataKey, dataValue) => {
 /**
  * 地域ボタンのElementを作成する関数
  * @function
- * @param {{key: string, list: Array{id: string| null, ja: string}}} areaData
+ * @param {{key: string, list: Array<{name: string | null, value: string | null, ja: string, region: string}>}} areaData
  * @param {string} dataKey
  * @returns {void} 返り値なし
  */
@@ -29,14 +29,14 @@ export const createSelectBlock = (areaData, dataKey) => {
   const fragment = new DocumentFragment();
 
   list?.forEach((listItem) => {
-    const id = listItem.id ?? window.crypto.randomUUID();
+    const id = window.crypto.randomUUID();
     const li = document.createElement("li");
     const input = document.createElement("input");
     const label = document.createElement("label");
     li.classList.add("input-wrap");
     input.type = "radio";
-    input.name = key;
-    input.value = listItem.ja;
+    input.name = `${key}-${dataKey}`;
+    input.value = listItem.value ?? listItem.ja;
     input.id = id;
     label.htmlFor = id;
     label.innerText = listItem.ja;
@@ -51,44 +51,40 @@ export const createSelectBlock = (areaData, dataKey) => {
 /**
  * 都道府県ボタンのElementを作成する関数
  * @function
- * @param {{key: string,  list: Array<string>}} regionData
- * @param {{key: string,  prefectureList: Array<{name: string | null, id: string| null, ja:string, region: string}>}} prefectureRowData
+ * @param {{key: string, list: Array<string>}} regionData
+ * @param {{key: string, prefectureList: Array<{name: string, ja:string, region: string}> | null, cityList: Array<{value: string, ja:string, region: string}> | null}} areaRowData
  * @param {string} dataKey
  * @returns {void} 返り値なし
  */
-export const updatePrefectureBlock = (
-  regionData,
-  prefectureRowData,
-  dataKey,
-) => {
+export const updatePrefectureBlock = (regionData, areaRowData, dataKey) => {
   const { key: regionKey } = regionData;
-  const { key: prefectureKey, prefectureList } = prefectureRowData;
+  const { key: prefectureKey, prefectureList, cityList } = areaRowData;
+  const areaRowList = prefectureList ?? cityList;
+  if (!areaRowList) return;
   /** @type {NodeListOf<HTMLInputElement>} */
-  const regionInputs = document.getElementsByName(regionKey);
+  const regionInputs = document.getElementsByName(`${regionKey}-${dataKey}`);
 
   /**
    * 地域に合致する都道府県の一覧を返す関数
    * @function
    * @param {string} regionName
-   * @param {Array<{name: string, ja:string, region: string}>} prefectureList
-   * @returns {Array<string>}
+   * @param {Array<{name: string | null, value: string | null, ja:string, region: string}>} areaList
+   * @returns {Array<{name: string | null, value: string | null, ja:string, region: string}>}
    */
-  const getMatchList = (regionName, prefectureList) => {
-    const matchList = prefectureList.filter(
-      (prefecture) => prefecture.region === regionName,
-    );
+  const getMatchList = (regionName, areaList) => {
+    const matchList = areaList.filter((area) => area.region === regionName);
     return matchList;
   };
 
   /**
    * 都道県データを整形する関数
    * @function
-   * @param {{key: string, prefectureList: Array<{name: string, ja:string, region: string}>}} prefectureRowData
-   * @param {Array<string>} matchList
-   * @returns {{key: string, list: Array<string>}}
+   * @param {{key: string, areaRowList: Array<{name: string, ja:string, region: string}>}} areaRowData
+   * @param {Array<{name: string | null, value: string|null, ja:string, region: string}>} matchList
+   * @returns {{key: string, list: Array<{name: string | null, value: string | null ja:string, region: string}>}}
    */
-  const formatPrefectureData = (prefectureRowData, matchList) => {
-    const { key } = prefectureRowData;
+  const formatAreaData = (areaRowData, matchList) => {
+    const { key } = areaRowData;
     const formatData = {
       key: key,
       list: matchList,
@@ -104,11 +100,8 @@ export const updatePrefectureBlock = (
       const regionName = targetInput.value;
       if (regionName === "") return;
 
-      const prefectureNameList = getMatchList(regionName, prefectureList);
-      const prefectureData = formatPrefectureData(
-        prefectureRowData,
-        prefectureNameList,
-      );
+      const regionMatchAreaList = getMatchList(regionName, areaRowList);
+      const prefectureData = formatAreaData(areaRowData, regionMatchAreaList);
       deleteAreaBlock(`data-${dataKey}-list`, prefectureKey);
       createSelectBlock(prefectureData, dataKey);
     });

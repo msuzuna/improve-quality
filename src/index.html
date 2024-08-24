@@ -122,6 +122,26 @@
       <section class="section">
         <div class="section-inner">
           <h2>NHK番組表</h2>
+          <div class="weather-contents" data-tv>
+            <fieldset data-tv-block="region">
+              <legend class="weather-caption">地域を選択してください。</legend>
+              <menu class="input-list" data-tv-list="region"></menu>
+            </fieldset>
+            <fieldset data-tv-block="prefecture">
+              <legend class="weather-caption">
+                都道府県を選択してください。
+              </legend>
+              <menu class="input-list" data-tv-list="city">
+                <label
+                  >地域ボタンを選択すると都道府県の選択ボタンが表示されます。
+                  <input type="text" readonly />
+                </label>
+              </menu>
+            </fieldset>
+          </div>
+          <div class="button-wrap">
+            <button type="button" class="button-submit">番組を検索する</button>
+          </div>
         </div>
       </section>
     </section>
