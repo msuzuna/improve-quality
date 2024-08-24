@@ -110,7 +110,7 @@ export const updatePrefectureBlock = (
         prefectureRowData,
         prefectureNameList,
       );
-      deleteAreaBlock("data-weather-list", prefectureKey);
+      deleteAreaBlock(`data-${dataKey}-list`, prefectureKey);
       createSelectBlock(prefectureData, dataKey);
     });
   });
