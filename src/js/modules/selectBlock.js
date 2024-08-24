@@ -15,7 +15,7 @@ const deleteAreaBlock = (dataKey, dataValue) => {
 /**
  * 地域ボタンのElementを作成する関数
  * @function
- * @param {{key: string, list: Array<string>}} areaData
+ * @param {{key: string, list: Array{id: string| null, ja: string}}} areaData
  * @param {string} dataKey
  * @returns {void} 返り値なし
  */
@@ -29,17 +29,17 @@ export const createSelectBlock = (areaData, dataKey) => {
   const fragment = new DocumentFragment();
 
   list?.forEach((listItem) => {
-    const id = window.crypto.randomUUID();
+    const id = listItem.id ?? window.crypto.randomUUID();
     const li = document.createElement("li");
     const input = document.createElement("input");
     const label = document.createElement("label");
     li.classList.add("input-wrap");
     input.type = "radio";
     input.name = key;
-    input.value = listItem;
+    input.value = listItem.ja;
     input.id = id;
     label.htmlFor = id;
-    label.innerText = listItem;
+    label.innerText = listItem.ja;
     li.appendChild(input);
     li.appendChild(label);
     fragment.append(li);
@@ -74,9 +74,9 @@ export const updatePrefectureBlock = (
    * @returns {Array<string>}
    */
   const getMatchList = (regionName, prefectureList) => {
-    const matchList = prefectureList
-      .filter((prefecture) => prefecture.region === regionName)
-      .map((item) => item.ja);
+    const matchList = prefectureList.filter(
+      (prefecture) => prefecture.region === regionName,
+    );
     return matchList;
   };
 

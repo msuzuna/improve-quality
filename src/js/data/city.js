@@ -1,7 +1,16 @@
 export const cityData = {
   region: {
     key: "region",
-    list: ["北海道", "東北", "関東", "中部", "近畿", "中国", "四国", "九州"],
+    list: [
+      { ja: "北海道" },
+      { ja: "東北" },
+      { ja: "関東" },
+      { ja: "中部" },
+      { ja: "近畿" },
+      { ja: "中国" },
+      { ja: "四国" },
+      { ja: "九州" },
+    ],
   },
   prefecture: {
     key: "prefecture",
