@@ -1,6 +1,6 @@
 import { cityData } from "../data/city.js";
 import { fetchData } from "./fetch.js";
-import { deleteAreaBlock, createSelectBlock } from "./selectBlock.js";
+import { createSelectBlock, updatePrefectureBlock } from "./selectBlock.js";
 
 /**
  * @typedef {Object} WeatherJson
@@ -28,60 +28,6 @@ import { deleteAreaBlock, createSelectBlock } from "./selectBlock.js";
  * 天気APIを利用して現在の天気を取得し、ブラウザに表示させる関数
  */
 export const weather = async () => {
-  /**
-   * 都道府県ボタンのElementを作成する関数
-   * @param {{key: string, list: Array<string>}} regionData
-   * @param {{key: string, prefectureList: Array<{name: string, ja:string, region: string}>}} prefectureRowData
-   */
-  const updatePrefectureBlock = (regionData, prefectureRowData, dataKey) => {
-    const { key: regionKey } = regionData;
-    const { key: prefectureKey, prefectureList } = prefectureRowData;
-    const regionInputs = document.getElementsByName(regionKey);
-
-    /**
-     * 地域に合致する都道府県の一覧を返す関数
-     * @param {string} regionName
-     * @param {Array<{name: string, ja:string, region: string}>} prefectureList
-     */
-    const getMatchList = (regionName, prefectureList) => {
-      const matchList = prefectureList
-        .filter((prefecture) => prefecture.region === regionName)
-        .map((item) => item.ja);
-      return matchList;
-    };
-
-    /**
-     * 都道県データを整形する関数
-     * @param {{key: string, prefectureList: Array<{name: string, ja:string, region: string}>}} prefectureRowData
-     * @param {Array<string>} matchList
-     */
-    const formatPrefectureData = (prefectureRowData, matchList) => {
-      const { key } = prefectureRowData;
-      const formatData = {
-        key: key,
-        list: matchList,
-      };
-      return formatData;
-    };
-
-    regionInputs?.forEach((input) => {
-      input.addEventListener("change", (event) => {
-        const targetInput = event.target;
-        if (!(targetInput instanceof HTMLInputElement)) return;
-        const regionName = targetInput.value;
-        if (regionName === "") return;
-
-        const prefectureNameList = getMatchList(regionName, prefectureList);
-        const prefectureData = formatPrefectureData(
-          prefectureRowData,
-          prefectureNameList
-        );
-        deleteAreaBlock("data-weather-list", prefectureKey);
-        createSelectBlock(prefectureData, dataKey);
-      });
-    });
-  };
-
   /**
    * 天気を取得するボタンの活性非活性を切り替える関数
    * @param {{key: string, list: Array<string>}} regionData
