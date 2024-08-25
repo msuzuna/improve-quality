@@ -127,10 +127,8 @@
               <legend class="weather-caption">地域を選択してください。</legend>
               <menu class="input-list" data-tv-list="region"></menu>
             </fieldset>
-            <fieldset data-tv-block="prefecture">
-              <legend class="weather-caption">
-                都道府県を選択してください。
-              </legend>
+            <fieldset data-tv-block="city">
+              <legend class="weather-caption">都市を選択してください。</legend>
               <menu class="input-list" data-tv-list="city">
                 <label
                   >地域ボタンを選択すると都道府県の選択ボタンが表示されます。
@@ -138,10 +136,43 @@
                 </label>
               </menu>
             </fieldset>
+            <fieldset data-tv-block="service-category">
+              <legend class="weather-caption">
+                サービスのカテゴリを選択してください。
+              </legend>
+              <menu class="input-list" data-tv-list="service-category"></menu>
+            </fieldset>
+            <fieldset data-tv-block="service">
+              <legend class="weather-caption">
+                サービスを選択してください。
+              </legend>
+              <menu class="input-list" data-tv-list="service">
+                <label
+                  >サービスのカテゴリボタンを選択するとサービスの選択ボタンが表示されます。
+                  <input type="text" readonly />
+                </label>
+              </menu>
+            </fieldset>
           </div>
           <div class="button-wrap">
-            <button type="button" class="button-submit">番組を検索する</button>
+            <button type="button" class="button-submit" data-tv-request>
+              番組を検索する
+            </button>
           </div>
+          <div data-tv-block="default">
+            <label
+              >「番組を検索する」ボタンを選択すると番組表が表示されます。
+              <input type="text" readonly />
+            </label>
+          </div>
+          <ul class="tv-schedule-list" hidden data-tv-block="result">
+            <li>
+              <span>日付・時間</span>
+              <span>チャンネル</span>
+              <span>番組タイトル</span>
+              <span>内容</span>
+            </li>
+          </ul>
         </div>
       </section>
     </section>
