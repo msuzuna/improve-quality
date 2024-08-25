@@ -76,3 +76,22 @@ exports.getMovieInformation = onRequest(async (request, response) => {
   response.send(json);
   response.end();
 });
+
+exports.getTvSchedule = onRequest(async (request, response) => {
+  const { area, service } = request.query;
+  const today = new Date();
+  const y = String(today.getFullYear());
+  const m = String(today.getMonth() + 1).padStart(2, "0");
+  const d = String(today.getDate()).padStart(2, "0");
+  const date = `${y}-${m}-${d}`;
+  const api = process.env.NHK_API_KEY;
+  const url = `https://api.nhk.or.jp/v2/pg/list/${area}/${service}/${date}.json?key=${api}`;
+  const data = await fetch(url);
+  const json = await data.json();
+  logger.info("テレビ番組情報取得", { structuredData: true });
+  response.set("Access-Control-Allow-Headers", "Origin, Methods");
+  response.set("Access-Control-Allow-Origin", "*");
+  response.set("Access-Control-Allow-Methods", "GET");
+  response.send(json);
+  response.end();
+});
