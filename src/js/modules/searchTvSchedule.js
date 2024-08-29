@@ -81,7 +81,7 @@ export const searchTvSchedule = () => {
     const areaKey = "city-tv";
     const serviceKey = "service-tv";
     /** @type {HTMLButtonElement | null} */
-    const requestButton = document.querySelector("[data-tv-request]");
+    const requestButton = document.querySelector("[data-request='tv']");
     if (!(requestButton instanceof HTMLButtonElement)) return;
 
     const resultList = document.querySelector("[data-tv-block='result']");

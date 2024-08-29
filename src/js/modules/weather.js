@@ -29,31 +29,6 @@ import { createSelectBlock, updateSelectBlock } from "./selectBlock.js";
  */
 export const weather = async () => {
   /**
-   * 天気を取得するボタンの活性非活性を切り替える関数
-   * @param {{key: string, list: Array<string>}} regionData
-   * @param {{key: string, prefectureList: Array<{name: string, ja:string, region: string}>}} prefectureRowData
-   */
-  const switchActiveRequestButton = (regionData, prefectureRowData) => {
-    const requestButton = document.querySelector("[data-weather-request]");
-    if (!(requestButton instanceof HTMLButtonElement)) return;
-    const { key: regionKey } = regionData;
-    const { key: prefectureKey } = prefectureRowData;
-    const regionInputs = document.getElementsByName(regionKey);
-
-    regionInputs?.forEach((input) => {
-      input.addEventListener("change", () => {
-        const prefectureInputs = document.getElementsByName(prefectureKey);
-        requestButton.disabled = true;
-        prefectureInputs?.forEach((prefectureInput) => {
-          prefectureInput.addEventListener("change", () => {
-            requestButton.disabled = false;
-          });
-        });
-      });
-    });
-  };
-
-  /**
    * 天気データをもとにブラウザの天気情報を更新する関数
    * @param {{key: string, prefectureList: Array<{name: string, ja:string, region: string}>}} prefectureRowData
    */
