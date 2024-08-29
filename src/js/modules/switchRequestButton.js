@@ -24,12 +24,12 @@ export const switchActiveRequestButton = () => {
       if (requiredValue === undefined) return;
 
       const triggerElement = document.querySelector(
-        `[data-trigger-${requiredValue}]`,
+        `[data-trigger-${requiredValue}]`
       );
       if (!(triggerElement instanceof HTMLMenuElement)) return;
 
       const triggerValue = triggerElement.getAttribute(
-        `data-trigger-${requiredValue}`,
+        `data-trigger-${requiredValue}`
       );
       if (triggerValue === null) return;
 

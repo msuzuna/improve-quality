@@ -181,16 +181,24 @@
               <legend class="weather-caption">
                 サービスのカテゴリを選択してください。
               </legend>
-              <menu class="input-list" data-tv-list="service-category"></menu>
+              <menu
+                class="input-list"
+                data-tv-list="service-category"
+                data-trigger-service-tv="service-category-tv"
+              ></menu>
             </fieldset>
             <fieldset data-tv-block="service">
               <legend class="weather-caption">
                 サービスを選択してください。
               </legend>
-              <menu class="input-list" data-tv-list="service">
+              <menu
+                class="input-list"
+                data-tv-list="service"
+                data-request-tv="service-tv"
+              >
                 <label
                   >サービスのカテゴリボタンを選択するとサービスの選択ボタンが表示されます。
-                  <input type="text" readonly />
+                  <input type="text" name="service-tv" readonly />
                 </label>
               </menu>
             </fieldset>
