@@ -3,9 +3,11 @@ import { toggleModal } from "./modules/toggleModal.js";
 import { displayMoviePoster } from "./modules/displayMoviePoster.js";
 import { searchTvSchedule } from "./modules/searchTvSchedule.js";
 import { switchActiveRequestButton } from "./modules/switchRequestButton.js";
+import { registerToLocalStorage } from "./modules/registerToLocalStorage.js";
 
 weather();
 toggleModal();
 displayMoviePoster();
 searchTvSchedule();
 switchActiveRequestButton();
+registerToLocalStorage();
