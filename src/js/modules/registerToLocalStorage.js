@@ -18,6 +18,16 @@ export const registerToLocalStorage = () => {
     );
 
     requiredValueArray.forEach((requiredValue) => {
+      const requiredInputs = document.getElementsByName(requiredValue);
+      requiredInputs.forEach((requiredInput) => {
+        requiredInput.addEventListener("change", (e) => {
+          const { currentTarget } = e;
+          if (currentTarget === null) return;
+          const { name, value } = currentTarget;
+          localStorage.setItem(name, value);
+        });
+      });
+
       /** @type {HTMLMenuElement} */
       const triggerElement = document.querySelector(
         `[data-trigger-${requiredValue}]`,
