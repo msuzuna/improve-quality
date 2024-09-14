@@ -11,9 +11,81 @@
   <body>
     <section>
       <h1>2024年上期成果物</h1>
-      <section class="section">
-        <div class="section-inner">
+      <section class="section" aria-live="polite">
+        <div class="section-inner" data-weather-wrap>
           <h2>現在の天気</h2>
+          <div class="weather-contents" data-weather>
+            <fieldset data-weather-block="region">
+              <legend class="weather-caption">地域を選択してください。</legend>
+              <menu class="input-list" data-weather-list="region"></menu>
+            </fieldset>
+            <fieldset data-weather-block="prefecture">
+              <legend class="weather-caption">
+                都道府県を選択してください。
+              </legend>
+              <menu class="input-list" data-weather-list="prefecture">
+                <label
+                  >地域ボタンを選択すると都道府県の選択ボタンが表示されます。
+                  <input type="text" readonly />
+                </label>
+              </menu>
+            </fieldset>
+          </div>
+          <div class="button-wrap">
+            <button
+              class="button-submit"
+              disabled
+              data-weather-request
+              type="button"
+            >
+              現在の天気を調べる
+            </button>
+          </div>
+          <div data-weather-block="default">
+            <label
+              >「現在の天気を調べる」ボタンを選択すると現在の天気が表示されます。
+              <input type="text" readonly />
+            </label>
+          </div>
+          <div class="weather-result-wrap" hidden data-weather-block="result">
+            <p data-weather-result="areaDescription">現在の天気</p>
+            <div class="weather-result-content">
+              <img
+                src=""
+                width="50"
+                height="50"
+                alt=""
+                data-weather-result="iconURL"
+              />
+              <span
+                class="weather-result-main"
+                data-weather-result="description"
+              ></span>
+              <dl class="weather-result-temp-wrap">
+                <div>
+                  <dt class="weather-result-temp">現在の気温</dt>
+                  <dd
+                    class="weather-result-temp"
+                    data-weather-result="temp"
+                  ></dd>
+                </div>
+                <div>
+                  <dt class="weather-result-temp">最高気温</dt>
+                  <dd
+                    class="weather-result-temp"
+                    data-weather-result="temp_max"
+                  ></dd>
+                </div>
+                <div>
+                  <dt class="weather-result-temp">最低気温</dt>
+                  <dd
+                    class="weather-result-temp"
+                    data-weather-result="temp_min"
+                  ></dd>
+                </div>
+              </dl>
+            </div>
+          </div>
         </div>
       </section>
       <section class="section">
