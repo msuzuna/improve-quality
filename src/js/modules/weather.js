@@ -69,7 +69,6 @@ export const weather = async () => {
     listElement.append(fragment);
   };
 
-
   /**
    * 都道府県ボタンのElementを作成する関数
    * @param {{key: string, list: Array<string>}} regionData
@@ -166,7 +165,8 @@ export const weather = async () => {
      */
     const getPrefectureEn = (prefectureJa, prefectureList) => {
       const prefectureEn = prefectureList.find(
-        (prefecture) => prefecture.ja === prefectureJa)?.name;
+        (prefecture) => prefecture.ja === prefectureJa,
+      )?.name;
       return prefectureEn;
     };
 
@@ -205,12 +205,20 @@ export const weather = async () => {
       const resultElements = document.querySelectorAll(`[${dataResultKey}]`);
       resultElements.forEach((resultElement) => {
         const resultId = resultElement.getAttribute(dataResultKey);
-        if(!(resultId === "areaDescription") && !(resultId === "iconURL") && !(resultId === "description") && !(resultId === "temp")&& !(resultId === "temp_min")&& !(resultId === "temp_max")) return
+        if (
+          !(resultId === "areaDescription") &&
+          !(resultId === "iconURL") &&
+          !(resultId === "description") &&
+          !(resultId === "temp") &&
+          !(resultId === "temp_min") &&
+          !(resultId === "temp_max")
+        )
+          return;
         if (resultId === "iconURL") {
-          if(!(resultElement instanceof HTMLImageElement)) return;
+          if (!(resultElement instanceof HTMLImageElement)) return;
           resultElement.src = weatherData[resultId];
         } else {
-          if(!(resultElement instanceof HTMLElement)) return;
+          if (!(resultElement instanceof HTMLElement)) return;
           resultElement.innerText = `${weatherData[resultId]}`;
         }
       });
@@ -220,13 +228,11 @@ export const weather = async () => {
 
     requestButton.addEventListener("click", async () => {
       const prefectureInputs = document.getElementsByName(prefectureKey);
-      const checkedPrefectureInput = [...prefectureInputs].find(
-        (input) => {
-          if(!(input instanceof HTMLInputElement)) return;
-          return input.checked;
-        }
-      );
-      if(!(checkedPrefectureInput instanceof HTMLInputElement)) return;
+      const checkedPrefectureInput = [...prefectureInputs].find((input) => {
+        if (!(input instanceof HTMLInputElement)) return;
+        return input.checked;
+      });
+      if (!(checkedPrefectureInput instanceof HTMLInputElement)) return;
       const checkedPrefectureValue = checkedPrefectureInput.value;
       const prefectureEn = getPrefectureEn(
         checkedPrefectureValue,
