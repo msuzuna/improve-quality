@@ -1,5 +1,6 @@
 import { cityData } from "../data/city.js";
 import { fetchData } from "./fetch.js";
+import { createSelectBlock, updateSelectBlock } from "./selectBlock.js";
 
 /**
  * @typedef {Object} WeatherJson
@@ -28,132 +29,11 @@ import { fetchData } from "./fetch.js";
  */
 export const weather = async () => {
   /**
-   * ブロックを削除する関数
-   * @param {string} dataKey
-   * @param {string} dataValue
-   */
-  const deleteBlockArea = (dataKey, dataValue) => {
-    const blockElement = document.querySelector(`[${dataKey}="${dataValue}"]`);
-    if (!(blockElement instanceof HTMLMenuElement)) return;
-    blockElement.innerHTML = "";
-  };
-
-  /**
-   * 地域ボタンのElementを作成する関数
-   * @param {{key: string, list: Array<string>}} areaData
-   */
-  const createSelectBlock = (areaData) => {
-    const { key, list } = areaData;
-    const listElement = document.querySelector(`[data-weather-list=${key}]`);
-    if (!(listElement instanceof HTMLMenuElement)) return;
-
-    const fragment = new DocumentFragment();
-
-    list?.forEach((listItem) => {
-      const id = window.crypto.randomUUID();
-      const li = document.createElement("li");
-      const input = document.createElement("input");
-      const label = document.createElement("label");
-      li.classList.add("input-wrap");
-      input.type = "radio";
-      input.name = key;
-      input.value = listItem;
-      input.id = id;
-      label.htmlFor = id;
-      label.innerText = listItem;
-      li.appendChild(input);
-      li.appendChild(label);
-      fragment.append(li);
-    });
-
-    listElement.append(fragment);
-  };
-
-  /**
-   * 都道府県ボタンのElementを作成する関数
-   * @param {{key: string, list: Array<string>}} regionData
-   * @param {{key: string, prefectureList: Array<{name: string, ja:string, region: string}>}} prefectureRowData
-   */
-  const updatePrefectureBlock = (regionData, prefectureRowData) => {
-    const { key: regionKey } = regionData;
-    const { key: prefectureKey, prefectureList } = prefectureRowData;
-    const regionInputs = document.getElementsByName(regionKey);
-
-    /**
-     * 地域に合致する都道府県の一覧を返す関数
-     * @param {string} regionName
-     * @param {Array<{name: string, ja:string, region: string}>} prefectureList
-     */
-    const getMatchList = (regionName, prefectureList) => {
-      const matchList = prefectureList
-        .filter((prefecture) => prefecture.region === regionName)
-        .map((item) => item.ja);
-      return matchList;
-    };
-
-    /**
-     * 都道県データを整形する関数
-     * @param {{key: string, prefectureList: Array<{name: string, ja:string, region: string}>}} prefectureRowData
-     * @param {Array<string>} matchList
-     */
-    const formatPrefectureData = (prefectureRowData, matchList) => {
-      const { key } = prefectureRowData;
-      const formatData = {
-        key: key,
-        list: matchList,
-      };
-      return formatData;
-    };
-
-    regionInputs?.forEach((input) => {
-      input.addEventListener("change", (event) => {
-        const targetInput = event.target;
-        if (!(targetInput instanceof HTMLInputElement)) return;
-        const regionName = targetInput.value;
-        if (regionName === "") return;
-
-        const prefectureNameList = getMatchList(regionName, prefectureList);
-        const prefectureData = formatPrefectureData(
-          prefectureRowData,
-          prefectureNameList
-        );
-        deleteBlockArea("data-weather-list", prefectureKey);
-        createSelectBlock(prefectureData);
-      });
-    });
-  };
-
-  /**
-   * 天気を取得するボタンの活性非活性を切り替える関数
-   * @param {{key: string, list: Array<string>}} regionData
-   * @param {{key: string, prefectureList: Array<{name: string, ja:string, region: string}>}} prefectureRowData
-   */
-  const switchActiveRequestButton = (regionData, prefectureRowData) => {
-    const requestButton = document.querySelector("[data-weather-request]");
-    if (!(requestButton instanceof HTMLButtonElement)) return;
-    const { key: regionKey } = regionData;
-    const { key: prefectureKey } = prefectureRowData;
-    const regionInputs = document.getElementsByName(regionKey);
-
-    regionInputs?.forEach((input) => {
-      input.addEventListener("change", () => {
-        const prefectureInputs = document.getElementsByName(prefectureKey);
-        requestButton.disabled = true;
-        prefectureInputs?.forEach((prefectureInput) => {
-          prefectureInput.addEventListener("change", () => {
-            requestButton.disabled = false;
-          });
-        });
-      });
-    });
-  };
-
-  /**
    * 天気データをもとにブラウザの天気情報を更新する関数
-   * @param {{key: string, prefectureList: Array<{name: string, ja:string, region: string}>}} prefectureRowData
+   * @param {{key: string, list: Array<{value: string, ja: string, category: string}> }} prefectureRowData
    */
   const updateResultBlock = (prefectureRowData) => {
-    const { key: prefectureKey, prefectureList } = prefectureRowData;
+    const { key: prefectureKey, list } = prefectureRowData;
     const dataKey = "result";
     const requestButton = document.querySelector("[data-weather-request]");
     if (!(requestButton instanceof HTMLButtonElement)) return;
@@ -161,12 +41,12 @@ export const weather = async () => {
     /**
      * 都道府県の日本語から英語を取得する関数
      * @param {string} prefectureJa
-     * @param {Array<{name: string, ja:string, region: string}>} prefectureList
+     * @param {Array<{value: string, ja: string, category: string}>} prefectureList
      */
     const getPrefectureEn = (prefectureJa, prefectureList) => {
       const prefectureEn = prefectureList.find(
         (prefecture) => prefecture.ja === prefectureJa,
-      )?.name;
+      )?.value;
       return prefectureEn;
     };
 
@@ -234,16 +114,13 @@ export const weather = async () => {
       });
       if (!(checkedPrefectureInput instanceof HTMLInputElement)) return;
       const checkedPrefectureValue = checkedPrefectureInput.value;
-      const prefectureEn = getPrefectureEn(
-        checkedPrefectureValue,
-        prefectureList
-      );
+      const prefectureEn = getPrefectureEn(checkedPrefectureValue, list);
       const url = `https://getweatherinformation-afq4w33w3q-uc.a.run.app/?prefecture=${prefectureEn}`;
       /** @type {WeatherApiJson} */
       const data = await fetchData(url);
       const weatherData = formatWeatherData(data);
       const defaultBlock = document.querySelector(
-        "[data-weather-block=default]"
+        "[data-weather-block=default]",
       );
       updateResultBlock(weatherData, dataKey);
       if (defaultBlock instanceof HTMLDivElement) {
@@ -253,10 +130,10 @@ export const weather = async () => {
     });
   };
 
+  const dataKey = "weather";
   const { region: regionData, prefecture: prefectureRowData } = cityData;
 
-  createSelectBlock(regionData);
-  updatePrefectureBlock(regionData, prefectureRowData);
-  switchActiveRequestButton(regionData, prefectureRowData);
+  createSelectBlock(regionData, dataKey);
+  updateSelectBlock(regionData, prefectureRowData, dataKey);
   updateResultBlock(prefectureRowData);
 };

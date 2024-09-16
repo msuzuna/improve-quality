@@ -17,16 +17,24 @@
           <div class="weather-contents" data-weather>
             <fieldset data-weather-block="region">
               <legend class="weather-caption">地域を選択してください。</legend>
-              <menu class="input-list" data-weather-list="region"></menu>
+              <menu
+                class="input-list"
+                data-weather-list="region"
+                data-trigger-prefecture-weather="region-weather"
+              ></menu>
             </fieldset>
             <fieldset data-weather-block="prefecture">
               <legend class="weather-caption">
                 都道府県を選択してください。
               </legend>
-              <menu class="input-list" data-weather-list="prefecture">
+              <menu
+                class="input-list"
+                data-weather-list="prefecture"
+                data-request-weather="prefecture-weather"
+              >
                 <label
                   >地域ボタンを選択すると都道府県の選択ボタンが表示されます。
-                  <input type="text" readonly />
+                  <input type="text" name="prefecture-weather" readonly />
                 </label>
               </menu>
             </fieldset>
@@ -35,7 +43,7 @@
             <button
               class="button-submit"
               disabled
-              data-weather-request
+              data-request="weather"
               type="button"
             >
               現在の天気を調べる
@@ -122,6 +130,78 @@
       <section class="section">
         <div class="section-inner">
           <h2>NHK番組表</h2>
+          <div class="weather-contents" data-tv>
+            <fieldset data-tv-block="region">
+              <legend class="weather-caption">地域を選択してください。</legend>
+              <menu
+                class="input-list"
+                data-tv-list="region"
+                data-trigger-city-tv="region-tv"
+              ></menu>
+            </fieldset>
+            <fieldset data-tv-block="city">
+              <legend class="weather-caption">都市を選択してください。</legend>
+              <menu
+                class="input-list"
+                data-tv-list="city"
+                data-request-tv="city-tv"
+              >
+                <label
+                  >地域ボタンを選択すると都道府県の選択ボタンが表示されます。
+                  <input type="text" name="city-tv" readonly />
+                </label>
+              </menu>
+            </fieldset>
+            <fieldset data-tv-block="service-category">
+              <legend class="weather-caption">
+                サービスのカテゴリを選択してください。
+              </legend>
+              <menu
+                class="input-list"
+                data-tv-list="service-category"
+                data-trigger-service-tv="service-category-tv"
+              ></menu>
+            </fieldset>
+            <fieldset data-tv-block="service">
+              <legend class="weather-caption">
+                サービスを選択してください。
+              </legend>
+              <menu
+                class="input-list"
+                data-tv-list="service"
+                data-request-tv="service-tv"
+              >
+                <label
+                  >サービスのカテゴリボタンを選択するとサービスの選択ボタンが表示されます。
+                  <input type="text" name="service-tv" readonly />
+                </label>
+              </menu>
+            </fieldset>
+          </div>
+          <div class="button-wrap">
+            <button
+              type="button"
+              class="button-submit"
+              data-request="tv"
+              disabled
+            >
+              番組を検索する
+            </button>
+          </div>
+          <div data-tv-block="default">
+            <label
+              >「番組を検索する」ボタンを選択すると番組表が表示されます。
+              <input type="text" readonly />
+            </label>
+          </div>
+          <ul class="tv-schedule-list" hidden data-tv-block="result">
+            <li>
+              <span>日付・時間</span>
+              <span>チャンネル</span>
+              <span>番組タイトル</span>
+              <span>内容</span>
+            </li>
+          </ul>
         </div>
       </section>
     </section>
