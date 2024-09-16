@@ -20,6 +20,19 @@ export const switchActiveRequestButton = () => {
       return targetAttr.value;
     });
 
+    const allRequiredChecked = requiredValueArray.every((item) => {
+      if (item === undefined) return;
+      const inputs = document.getElementsByName(item);
+      const isRequiredChecked = [...inputs].some((input) => {
+        if (!(input instanceof HTMLInputElement)) return;
+        return input.checked;
+      });
+      return isRequiredChecked;
+    });
+    if (allRequiredChecked) {
+      requestButton.disabled = false;
+    }
+
     requiredValueArray.forEach((requiredValue) => {
       if (requiredValue === undefined) return;
 
@@ -32,6 +45,24 @@ export const switchActiveRequestButton = () => {
         `data-trigger-${requiredValue}`,
       );
       if (triggerValue === null) return;
+
+      const requiredInputs = document.getElementsByName(requiredValue);
+      requiredInputs.forEach((requiredInput) => {
+        requiredInput.addEventListener("change", () => {
+          const allRequiredChecked = requiredValueArray.every((item) => {
+            if (item === undefined) return;
+            const inputs = document.getElementsByName(item);
+            const isRequiredChecked = [...inputs].some((input) => {
+              if (!(input instanceof HTMLInputElement)) return;
+              return input.checked;
+            });
+            return isRequiredChecked;
+          });
+          if (allRequiredChecked) {
+            requestButton.disabled = false;
+          }
+        });
+      });
 
       const triggerInputs = document.getElementsByName(triggerValue);
       triggerInputs.forEach((triggerInput) => {
