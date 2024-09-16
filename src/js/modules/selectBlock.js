@@ -20,6 +20,7 @@ export const createSelectBlock = (optionData, dataKey) => {
   if (!(listElement instanceof HTMLMenuElement)) return;
 
   const fragment = new DocumentFragment();
+  const localStorageData = localStorage[`${key}-${dataKey}`];
 
   list?.forEach((listItem) => {
     const id = window.crypto.randomUUID();
@@ -30,6 +31,9 @@ export const createSelectBlock = (optionData, dataKey) => {
     input.type = "radio";
     input.name = `${key}-${dataKey}`;
     input.value = listItem.value !== "" ? listItem.value : listItem.ja;
+    if (localStorageData === (listItem.value ?? listItem.ja)) {
+      input.checked = true;
+    }
     input.id = id;
     label.htmlFor = id;
     label.innerText = listItem.ja;
@@ -77,6 +81,14 @@ export const updateSelectBlock = (categoryData, optionRowData, dataKey) => {
     };
     return formatData;
   };
+
+  const localStorageData = localStorage.getItem(`${categoryKey}-${dataKey}`);
+  if (localStorageData !== null) {
+    const matchList = getMatchList(localStorageData, list);
+    const formattedData = formatData(optionKey, matchList);
+    deleteSelectBlock(`data-${dataKey}-list`, optionKey);
+    createSelectBlock(formattedData, dataKey);
+  }
 
   regionInputs?.forEach((input) => {
     input.addEventListener("change", (event) => {
