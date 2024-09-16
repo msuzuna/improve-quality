@@ -55,6 +55,10 @@ exports.getTvSchedule = onRequest(async (request, response) => {
   response.set("Access-Control-Allow-Headers", "Origin, Methods");
   response.set("Access-Control-Allow-Origin", "*");
   response.set("Access-Control-Allow-Methods", "GET");
-  response.send(json);
+  if (data.ok) {
+    response.send({ data: json, ok: true });
+  } else {
+    response.send({ ok: false });
+  }
   response.end();
 });

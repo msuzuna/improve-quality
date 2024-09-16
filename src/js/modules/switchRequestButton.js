@@ -1,35 +1,33 @@
 /**
  * 天気を取得するボタンの活性非活性を切り替える関数
- * @function
- * @returns {void} 返り値なし
  */
 export const switchActiveRequestButton = () => {
-  /** @type {NodeListOf<HTMLButtonElement>} */
   const requestButtons = document.querySelectorAll("[data-request]");
 
   requestButtons.forEach((requestButton) => {
-    /** @type {string | null}  */
+    if (!(requestButton instanceof HTMLButtonElement)) return;
+
     const value = requestButton.getAttribute("data-request");
     if (value === null) return;
 
-    /** @type {Array<HTMLMenuElement>}  */
     const requireElementArray = [
       ...document.querySelectorAll(`[data-request-${value}]`),
     ];
 
-    /** @type {Array<string>} */
-    const requiredValueArray = requireElementArray.map(
-      (item) => item.attributes.getNamedItem(`data-request-${value}`).value,
-    );
+    const requiredValueArray = requireElementArray.map((item) => {
+      const targetAttr = item.attributes.getNamedItem(`data-request-${value}`);
+      if (targetAttr === null) return;
+      return targetAttr.value;
+    });
 
     requiredValueArray.forEach((requiredValue) => {
-      /** @type {HTMLMenuElement} */
+      if (requiredValue === undefined) return;
+
       const triggerElement = document.querySelector(
         `[data-trigger-${requiredValue}]`,
       );
       if (!(triggerElement instanceof HTMLMenuElement)) return;
 
-      /** @type {string | null} */
       const triggerValue = triggerElement.getAttribute(
         `data-trigger-${requiredValue}`,
       );
@@ -44,10 +42,12 @@ export const switchActiveRequestButton = () => {
           requiredInputs.forEach((requiredInput) => {
             requiredInput.addEventListener("change", () => {
               const allRequiredChecked = requiredValueArray.every((item) => {
+                if (item === undefined) return;
                 const inputs = document.getElementsByName(item);
-                const isRequiredChecked = [...inputs].some(
-                  (input) => input.checked,
-                );
+                const isRequiredChecked = [...inputs].some((input) => {
+                  if (!(input instanceof HTMLInputElement)) return;
+                  return input.checked;
+                });
                 return isRequiredChecked;
               });
               if (allRequiredChecked) {

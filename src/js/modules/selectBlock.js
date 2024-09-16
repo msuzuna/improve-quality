@@ -1,12 +1,9 @@
 /**
  * ブロックを削除する関数
- * @function
  * @param {string} dataKey
  * @param {string} dataValue
- * @returns {void} 返り値なし
  */
 const deleteSelectBlock = (dataKey, dataValue) => {
-  /** @type {HTMLMenuElement | null} ボタンリストのElement */
   const blockElement = document.querySelector(`[${dataKey}="${dataValue}"]`);
   if (!(blockElement instanceof HTMLMenuElement)) return;
   blockElement.innerHTML = "";
@@ -14,18 +11,14 @@ const deleteSelectBlock = (dataKey, dataValue) => {
 
 /**
  * 地域ボタンのElementを作成する関数
- * @function
- * @param {{key: string, list: Array<{value: string | null, ja: string}>}} optionData
+ * @param {{key: string, list: Array<{value: string, ja: string, category: string}>}} optionData
  * @param {string} dataKey
- * @returns {void} 返り値なし
  */
 export const createSelectBlock = (optionData, dataKey) => {
   const { key, list } = optionData;
-  /** @type {HTMLMenuElement | null} ボタンリストのElement */
   const listElement = document.querySelector(`[data-${dataKey}-list=${key}]`);
   if (!(listElement instanceof HTMLMenuElement)) return;
 
-  /** @type {DocumentFragment} */
   const fragment = new DocumentFragment();
 
   list?.forEach((listItem) => {
@@ -36,7 +29,7 @@ export const createSelectBlock = (optionData, dataKey) => {
     li.classList.add("input-wrap");
     input.type = "radio";
     input.name = `${key}-${dataKey}`;
-    input.value = listItem.value ?? listItem.ja;
+    input.value = listItem.value !== "" ? listItem.value : listItem.ja;
     input.id = id;
     label.htmlFor = id;
     label.innerText = listItem.ja;
@@ -51,24 +44,19 @@ export const createSelectBlock = (optionData, dataKey) => {
 /**
  * 都道府県ボタンのElementを作成する関数
  * @function
- * @param {{key: string, list: Array<{value: string | null, ja: string}>}} categoryData
- * @param {{key: string, list: Array<{name: string | null, value: string | null, ja:string, category: string}> }} optionRowData
+ * @param {{key: string, list: Array<{value: string, ja: string, category: string}>}} categoryData
+ * @param {{key: string, list: Array<{value: string, ja: string, category: string}> }} optionRowData
  * @param {string} dataKey
- * @returns {void} 返り値なし
  */
 export const updateSelectBlock = (categoryData, optionRowData, dataKey) => {
   const { key: categoryKey } = categoryData;
   const { key: optionKey, list } = optionRowData;
-
-  /** @type {NodeListOf<HTMLInputElement>} */
   const regionInputs = document.getElementsByName(`${categoryKey}-${dataKey}`);
 
   /**
    * 地域に合致する都道府県の一覧を返す関数
-   * @function
    * @param {string} categoryName
-   * @param {Array<{name: string | null, value: string | null, ja:string, category: string}>} optionList
-   * @returns {Array<{name: string | null, value: string | null, ja:string, category: string}>}
+   * @param {Array<{value: string, ja: string, category: string}>} optionList
    */
   const getMatchList = (categoryName, optionList) => {
     const matchList = optionList.filter(
@@ -79,24 +67,13 @@ export const updateSelectBlock = (categoryData, optionRowData, dataKey) => {
 
   /**
    * 都道県データを整形する関数
-   * @function
    * @param {string} optionKey
-   * @param {Array<{name: string | null, value: string | null, ja:string, category: string}>} matchList
-   * @returns {{key: string, list: Array<{value: string | null, ja:string}>}}
+   * @param {Array<{value: string, ja: string, category: string}>} matchList
    */
   const formatData = (optionKey, matchList) => {
-    const formatList = [];
-    matchList.forEach((item) => {
-      const obj = {};
-      if (item.value) {
-        obj.value = item.value;
-      }
-      obj.ja = item.ja;
-      formatList.push(obj);
-    });
     const formatData = {
       key: optionKey,
-      list: formatList,
+      list: matchList,
     };
     return formatData;
   };
@@ -104,8 +81,7 @@ export const updateSelectBlock = (categoryData, optionRowData, dataKey) => {
   regionInputs?.forEach((input) => {
     input.addEventListener("change", (event) => {
       const targetInput = event.target;
-      if (!(targetInput instanceof EventTarget)) return;
-      /** @type {string} */
+      if (!(targetInput instanceof HTMLInputElement)) return;
       const categoryName = targetInput.value;
       if (categoryName === "") return;
 

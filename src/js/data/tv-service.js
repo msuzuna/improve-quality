@@ -1,7 +1,11 @@
 export const tvService = {
   serviceCategory: {
     key: "service-category",
-    list: [{ ja: "テレビ" }, { ja: "ラジオ" }, { ja: "ネットラジオ" }],
+    list: [
+      { value: "", ja: "テレビ", category: "" },
+      { value: "", ja: "ラジオ", category: "" },
+      { value: "", ja: "ネットラジオ", category: "" },
+    ],
   },
   service: {
     key: "service",
@@ -14,7 +18,7 @@ export const tvService = {
       { value: "e4", ja: "ＮＨＫワンセグ２", category: "テレビ" },
       { value: "s1", ja: "ＮＨＫＢＳ", category: "テレビ" },
       { value: "s2", ja: "ＮＨＫ ＢＳ(１０２ｃｈ)", category: "テレビ" },
-      { value: "s5", ja: "ＮＨＫ ＢＳプレミアム４Ｋ" },
+      { value: "s5", ja: "ＮＨＫ ＢＳプレミアム４Ｋ", category: "テレビ" },
       { value: "s6", ja: "ＮＨＫ ＢＳ８Ｋ", category: "テレビ" },
       { value: "r1", ja: "ＮＨＫラジオ第1", category: "ラジオ" },
       { value: "r2", ja: "ＮＨＫラジオ第2", category: "ラジオ" },

@@ -30,10 +30,10 @@ import { createSelectBlock, updateSelectBlock } from "./selectBlock.js";
 export const weather = async () => {
   /**
    * 天気データをもとにブラウザの天気情報を更新する関数
-   * @param {{key: string, prefectureList: Array<{name: string, ja:string, region: string}>}} prefectureRowData
+   * @param {{key: string, list: Array<{value: string, ja: string, category: string}> }} prefectureRowData
    */
   const updateResultBlock = (prefectureRowData) => {
-    const { key: prefectureKey, prefectureList } = prefectureRowData;
+    const { key: prefectureKey, list } = prefectureRowData;
     const dataKey = "result";
     const requestButton = document.querySelector("[data-weather-request]");
     if (!(requestButton instanceof HTMLButtonElement)) return;
@@ -41,12 +41,12 @@ export const weather = async () => {
     /**
      * 都道府県の日本語から英語を取得する関数
      * @param {string} prefectureJa
-     * @param {Array<{name: string, ja:string, region: string}>} prefectureList
+     * @param {Array<{value: string, ja: string, category: string}>} prefectureList
      */
     const getPrefectureEn = (prefectureJa, prefectureList) => {
       const prefectureEn = prefectureList.find(
-        (prefecture) => prefecture.ja === prefectureJa
-      )?.name;
+        (prefecture) => prefecture.ja === prefectureJa,
+      )?.value;
       return prefectureEn;
     };
 
@@ -78,7 +78,7 @@ export const weather = async () => {
      */
     const updateResultBlock = (weatherData, dataValue) => {
       const weatherResultElement = document.querySelector(
-        `[data-weather-block=${dataValue}]`
+        `[data-weather-block=${dataValue}]`,
       );
       if (!(weatherResultElement instanceof HTMLDivElement)) return;
       const dataResultKey = "data-weather-result";
@@ -114,16 +114,13 @@ export const weather = async () => {
       });
       if (!(checkedPrefectureInput instanceof HTMLInputElement)) return;
       const checkedPrefectureValue = checkedPrefectureInput.value;
-      const prefectureEn = getPrefectureEn(
-        checkedPrefectureValue,
-        prefectureList
-      );
+      const prefectureEn = getPrefectureEn(checkedPrefectureValue, list);
       const url = `https://getweatherinformation-afq4w33w3q-uc.a.run.app/?prefecture=${prefectureEn}`;
       /** @type {WeatherApiJson} */
       const data = await fetchData(url);
       const weatherData = formatWeatherData(data);
       const defaultBlock = document.querySelector(
-        "[data-weather-block=default]"
+        "[data-weather-block=default]",
       );
       updateResultBlock(weatherData, dataKey);
       if (defaultBlock instanceof HTMLDivElement) {
@@ -136,8 +133,7 @@ export const weather = async () => {
   const dataKey = "weather";
   const { region: regionData, prefecture: prefectureRowData } = cityData;
 
-  createSelectBlock(regionData);
-  updatePrefectureBlock(regionData, prefectureRowData);
-  switchActiveRequestButton(regionData, prefectureRowData);
+  createSelectBlock(regionData, dataKey);
+  updateSelectBlock(regionData, prefectureRowData, dataKey);
   updateResultBlock(prefectureRowData);
 };
