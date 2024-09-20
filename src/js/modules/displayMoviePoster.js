@@ -1,4 +1,4 @@
-import { fetchData } from "./fetch.js";
+// @ts-check
 
 /**
  * @typedef {Object} Result
@@ -23,56 +23,37 @@ import { fetchData } from "./fetch.js";
  * @property {number} page
  * @property {number} total_pages
  * @property {number} total_results
+ * @property {number} page
  * @property {Result[]} results
  */
 
-/**
- * 映画APIを利用して現在放映されている映画のポスターを表示させる
- */
 export const displayMoviePoster = async () => {
-  const observationTrigger = document.querySelector(
-    "[data-modal-open='movie-poster']",
-  );
-  if (!(observationTrigger instanceof HTMLButtonElement)) return;
+  /**
+   * 映画データ取得APIを叩くだけの関数
+   * @param {number} _pageIndex ページ番号
+   */
+  const fetchMovieData = async (_pageIndex) => {
+    const url = `https://getmovieinformation-afq4w33w3q-uc.a.run.app/?page=${_pageIndex}`;
 
-  const isButtonDisabled = observationTrigger?.disabled;
-  // モーダルを開くボタンとモーダルの中身のidが一致しない場合モーダルが開かないため、早期リターン
-  if (!(observationTrigger instanceof HTMLButtonElement) || isButtonDisabled)
-    return;
-
-  const posterBlock = document.querySelector("[data-movie='block']");
-  if (!(posterBlock instanceof HTMLElement)) {
-    observationTrigger.disabled = true;
-    return;
-  }
-
-  const url = "https://getmovieinformation-afq4w33w3q-uc.a.run.app/";
-  /** @type {MovieData} 映画情報が格納されたオブジェクト */
-  const defaultData = await fetchData(url);
-  const { page: defaultPage, total_pages: totalPages } = defaultData;
-  // 通信がうまくいかなかったなど、必要な情報が得られなかった場合は早期リターン
-  if (defaultPage === undefined || totalPages === undefined) {
-    observationTrigger.disabled = true;
-    return;
-  }
+    /** @type {MovieData} */
+    const data = await (await fetch(url)).json();
+    return data;
+  };
 
   /**
-   * 映画のポスターを取得し、映画ポスター要素を生成する関数
+   * データを元にUIを描画するだけの関数
+   * @param {Result[]} results
    */
-  const createPosterElement = async (pageIndex = 1) => {
-    /** @type {MovieData} 映画情報が格納されたオブジェクト */
-    const data = await fetchData(`${url}?page=${pageIndex}`);
-    const { results } = data;
-    if (results === undefined) {
-      observationTrigger.disabled = true;
-      return;
+  const appendMoviePosterImages = async (results) => {
+    const posterBlock = document.querySelector("[data-movie='block']");
+    if (posterBlock === null) {
+      throw new Error('Cannot find "poster block" element');
     }
 
     const fragment = new DocumentFragment();
 
     results.forEach((result) => {
       const { poster_path, title } = result;
-      if (poster_path === null) return;
       const srcUrl = `https://image.tmdb.org/t/p/w300_and_h450_bestv2${poster_path}`;
       const imgWidth = 100;
       const imgHeight = 150;
@@ -88,59 +69,31 @@ export const displayMoviePoster = async () => {
   };
 
   /**
-   * 監視を開始する関数
-   * @param {number} defaultPageIndex
-   * @param {number} totalPageIndex
+   * ダイアログが最後までスクロールされたときに任意の関数を実行するよう Observer に登録するだけの関数
+   * @param {() => void} cb ダイアログが最後までスクロールされたときに実行する関数
    */
-  const startObservation = (defaultPageIndex, totalPageIndex) => {
+  const observeDialogScroll = (cb) => {
+    const observationTrigger = document.querySelector(
+      "[data-modal-open='movie-poster']",
+    );
     const scrollArea = document.getElementById("movie-poster");
-    const target = document.querySelector("[data-movie='end']");
+    const target = document.querySelector('[data-movie="end"]');
 
-    /**
-     * scrollAreaは以下の理由からnullチェック不要
-     * モーダルを開くボタンをモーダルコンテンツでIDが違う場合はすでにreturnされている
-     * モーダルを開くボタンのdata属性がmovie-posterではない場合はすでにreturnされている
-     */
-    if (!(target instanceof HTMLElement)) {
-      observationTrigger.disabled = true;
-      return;
+    if (observationTrigger === null || target === null) {
+      throw new Error("Cannot find element");
     }
-
-    /**
-     * 次のページ数を取得する関数を生成する関数
-     * @param {number} defaultPageIndex
-     * @param {number} totalPageIndex
-     */
-    const getNextIndexFactory = (defaultPageIndex, totalPageIndex) => {
-      let currentPageIndex = defaultPageIndex;
-
-      /**
-       * 次のページ数を取得する
-       */
-      const getNextIndex = () => {
-        if (currentPageIndex === totalPageIndex) {
-          currentPageIndex = defaultPageIndex;
-        } else {
-          currentPageIndex += 1;
-        }
-        return currentPageIndex;
-      };
-      return getNextIndex;
-    };
-
-    const nextIndex = getNextIndexFactory(defaultPageIndex, totalPageIndex);
 
     const intersectionObserver = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            createPosterElement(nextIndex());
+            cb();
           }
         });
       },
       {
         root: scrollArea,
-        threshold: 0
+        threshold: 0,
       },
     );
 
@@ -149,6 +102,52 @@ export const displayMoviePoster = async () => {
     });
   };
 
-  createPosterElement();
-  startObservation(defaultPage, totalPages);
+  /**
+   * - `fetchMovieData` を呼び出す関数を返す関数
+   * - 呼び出すたびに pageIndex はインクリメントし、maxPage を超えたら以降は実行しない
+   */
+  const createMovieFetcher = () => {
+    let currentPage = 1;
+    let maxPage = 0;
+
+    // クロージャを返す
+    return async () => {
+      if (maxPage && currentPage > maxPage) return null;
+
+      const data = await fetchMovieData(currentPage);
+      const { total_pages } = data;
+      maxPage = total_pages;
+      currentPage += 1;
+      return data;
+    };
+  };
+
+  const init = async () => {
+    const fetchMovie = createMovieFetcher();
+    const createMoviePosterListFromFetch = async () => {
+      const results = (await fetchMovie())?.results;
+      if (!results)
+        throw new Error('Cannot find "results" property in movieData');
+
+      await appendMoviePosterImages(results);
+    };
+
+    try {
+      await createMoviePosterListFromFetch();
+
+      observeDialogScroll(async () => {
+        await createMoviePosterListFromFetch();
+      });
+    } catch (error) {
+      const observationTrigger = document.querySelector(
+        "[data-modal-open='movie-poster']",
+      );
+
+      if (observationTrigger instanceof HTMLButtonElement) {
+        observationTrigger && (observationTrigger.disabled = true);
+      }
+      console.error(error);
+    }
+  };
+  init();
 };
