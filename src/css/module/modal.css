@@ -1,0 +1,18 @@
+html:has(dialog[open]) {
+  overflow: hidden;
+}
+
+dialog::backdrop {
+  background: rgb(0 0 0 / 50%);
+}
+
+.modal-close-wrap {
+  position: sticky;
+  top: 0;
+  padding: 40px 40px 20px;
+  background: white;
+}
+
+.modal-content {
+  padding: 0 40px 40px;
+}

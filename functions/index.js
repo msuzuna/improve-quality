@@ -14,6 +14,28 @@ exports.getWeatherInformation = onRequest(async (request, response) => {
     "https://improve-quality.web.app",
   );
   response.set("Access-Control-Allow-Methods", "GET");
-  response.send(json);
+  if (data.ok) {
+    response.send({ data: json, ok: true });
+  } else {
+    response.send({ ok: false });
+  }
+  response.end();
+});
+
+exports.getMovieInformation = onRequest(async (request, response) => {
+  const page = typeof request.query.page === "number" ? request.query.page : 1;
+  const api = process.env.MOVIE_API_KEY;
+  const url = `https://api.themoviedb.org/3/movie/now_playing?api_key=${api}&language=ja&region=JP&page=${page}`;
+  const data = await fetch(url);
+  const json = await data.json();
+  logger.info("映画情報取得", { structuredData: true });
+  response.set("Access-Control-Allow-Headers", "Origin, Methods");
+  response.set("Access-Control-Allow-Origin", "*");
+  response.set("Access-Control-Allow-Methods", "GET");
+  if (data.ok) {
+    response.send({ data: json, ok: true });
+  } else {
+    response.send({ ok: false });
+  }
   response.end();
 });
