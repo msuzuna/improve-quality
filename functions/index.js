@@ -30,7 +30,10 @@ exports.getMovieInformation = onRequest(async (request, response) => {
   const json = await data.json();
   logger.info("映画情報取得", { structuredData: true });
   response.set("Access-Control-Allow-Headers", "Origin, Methods");
-  response.set("Access-Control-Allow-Origin", "*");
+  response.set(
+    "Access-Control-Allow-Origin",
+    "https://improve-quality.web.app",
+  );
   response.set("Access-Control-Allow-Methods", "GET");
   if (data.ok) {
     response.send({ data: json, ok: true });
