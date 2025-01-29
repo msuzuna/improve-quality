@@ -51,14 +51,13 @@
     "json": "yarn run clean/json && npm-run-all -s json/plain",
     "watch/html": "watch 'yarn run html' ./src/",
     "watch/css": "watch 'yarn run css' ./src/",
-    "watch/js": "watch 'yarn run js' ./src/js",
+    "watch/ts": "tsc -w",
     "watch/json": "watch 'yarn run json' ./src/json",
     "watch/server": "browser-sync start --server dist --files 'dist'",
-    "dev": "yarn run-p watch/html watch/css watch/js watch/json watch/server",
-    "build": "yarn run html && yarn run css && yarn run js && yarn run json",
+    "dev": "yarn run-p watch/html watch/css watch/ts watch/json watch/server",
+    "build": "yarn run html && yarn run css && yarn run tsc && yarn run json",
     "prepare": "husky"
   },
-  "packageManager": "yarn@4.1.1",
   "dependencies": {
     "firebase": "^10.11.0"
   }
