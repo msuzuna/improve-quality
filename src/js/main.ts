@@ -1,9 +1,7 @@
-import { weather } from "./modules/weather.ts";
-import { toggleModal } from "./modules/toggleModal.ts";
-import { displayMoviePoster } from "./modules/displayMoviePoster.ts";
+import { weather } from "./modules/weather";
+import { toggleModal } from "./modules/toggleModal";
+import { displayMoviePoster } from "./modules/displayMoviePoster";
 
 weather();
 toggleModal();
 displayMoviePoster();
-
-console.log("あいうえお");

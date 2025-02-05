@@ -50,7 +50,7 @@
     "json": "yarn run clean/json && npm-run-all -s json/plain",
     "watch/html": "watch 'yarn run html' ./src/",
     "watch/css": "watch 'yarn run css' ./src/",
-    "watch/ts": "tsc --watch ./src/ts",
+    "watch/ts": "tsc --watch",
     "watch/json": "watch 'yarn run json' ./src/json",
     "watch/server": "browser-sync start --server dist --files 'dist'",
     "dev": "yarn run-p watch/html watch/css watch/ts watch/json watch/server",
