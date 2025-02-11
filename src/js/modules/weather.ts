@@ -206,7 +206,7 @@ export const weather = async () => {
      * 天気の結果を表示させる関数
      */
     const updateResultBlock = (
-      weatherData: WeatherJson & MainJson,
+      weatherData: ReturnType<typeof formatWeatherData>,
       dataValue: string,
     ) => {
       const weatherResultElement = document.querySelector(
@@ -216,7 +216,9 @@ export const weather = async () => {
       const dataResultKey = "data-weather-result";
       const resultElements = document.querySelectorAll(`[${dataResultKey}]`);
       resultElements.forEach((resultElement) => {
-        const resultId = resultElement.getAttribute(dataResultKey);
+        const resultId = resultElement.getAttribute(
+          dataResultKey,
+        ) as keyof ReturnType<typeof formatWeatherData>;
         if (
           !(resultId === "areaDescription") &&
           !(resultId === "iconURL") &&
