@@ -1,6 +1,6 @@
-import { weather } from "./modules/weather";
-import { toggleModal } from "./modules/toggleModal";
-import { displayMoviePoster } from "./modules/displayMoviePoster";
+import { weather } from "./modules/weather.js";
+import { toggleModal } from "./modules/toggleModal.js";
+import { displayMoviePoster } from "./modules/displayMoviePoster.js";
 
 weather();
 toggleModal();
