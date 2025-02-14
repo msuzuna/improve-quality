@@ -75,11 +75,6 @@ export const weather = async () => {
     const { key: prefectureKey, prefectureList } = prefectureRowData;
     const regionInputs = document.getElementsByName(regionKey);
 
-    /**
-     * 地域に合致する都道府県の一覧を返す関数
-     * @param {string} regionName
-     * @param {Array<{name: string, ja:string, region: string}>} prefectureList
-     */
     const getMatchList = (
       regionName: string,
       prefectureList: prefectureList
@@ -218,8 +213,7 @@ export const weather = async () => {
         prefectureList
       );
       const url = `https://getweatherinformation-afq4w33w3q-uc.a.run.app/?prefecture=${prefectureEn}`;
-      /** @type {WeatherApiJson} */
-      const data = await fetchData(url);
+      const data: WeatherApiJson = await fetchData(url);
       const weatherData = formatWeatherData(data);
       const defaultBlock = document.querySelector(
         "[data-weather-block=default]"
