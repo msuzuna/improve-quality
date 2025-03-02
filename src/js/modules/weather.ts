@@ -35,15 +35,19 @@ export const weather = async () => {
   };
 
   const deleteBlockArea = (dataKey: string, dataValue: string) => {
-    const blockElement = document.querySelector(`[${dataKey}="${dataValue}"]`);
-    if (!(blockElement instanceof HTMLMenuElement)) return;
+    const blockElement = document.querySelector<HTMLMenuElement>(
+      `[${dataKey}="${dataValue}"]`
+    );
+    if (!blockElement) return;
     blockElement.innerHTML = "";
   };
 
   const createSelectBlock = (areaData: areaData) => {
     const { key, list } = areaData;
-    const listElement = document.querySelector(`[data-weather-list=${key}]`);
-    if (!(listElement instanceof HTMLMenuElement)) return;
+    const listElement = document.querySelector<HTMLMenuElement>(
+      `[data-weather-list=${key}]`
+    );
+    if (!listElement) return;
 
     const fragment = new DocumentFragment();
 
@@ -99,8 +103,8 @@ export const weather = async () => {
 
     regionInputs?.forEach((input) => {
       input.addEventListener("change", (event) => {
-        const targetInput = event.target;
-        if (!(targetInput instanceof HTMLInputElement)) return;
+        const targetInput = event.target as HTMLInputElement;
+        if (!targetInput) return;
         const regionName = targetInput.value;
         if (regionName === "") return;
 
@@ -119,8 +123,10 @@ export const weather = async () => {
     regionData: areaData,
     prefectureRowData: prefectureData
   ) => {
-    const requestButton = document.querySelector("[data-weather-request]");
-    if (!(requestButton instanceof HTMLButtonElement)) return;
+    const requestButton = document.querySelector<HTMLButtonElement>(
+      "[data-weather-request]"
+    );
+    if (!requestButton) return;
     const { key: regionKey } = regionData;
     const { key: prefectureKey } = prefectureRowData;
     const regionInputs = document.getElementsByName(regionKey);
@@ -141,8 +147,10 @@ export const weather = async () => {
   const updateResultBlock = (prefectureRowData: prefectureData) => {
     const { key: prefectureKey, prefectureList } = prefectureRowData;
     const dataKey = "result";
-    const requestButton = document.querySelector("[data-weather-request]");
-    if (!(requestButton instanceof HTMLButtonElement)) return;
+    const requestButton = document.querySelector<HTMLButtonElement>(
+      "[data-weather-request]"
+    );
+    if (!requestButton) return;
 
     const getPrefectureEn = (
       prefectureJa: string,
@@ -171,23 +179,24 @@ export const weather = async () => {
       return weatherData;
     };
     const updateResultBlock = (weatherData: WeatherData, dataValue: string) => {
-      const weatherResultElement = document.querySelector(
+      const weatherResultElement = document.querySelector<HTMLDivElement>(
         `[data-weather-block=${dataValue}]`
       );
-      if (!(weatherResultElement instanceof HTMLDivElement)) return;
+      if (!weatherResultElement) return;
       const dataResultKey = "data-weather-result";
       const resultElements = document.querySelectorAll(`[${dataResultKey}]`);
       resultElements.forEach((resultElement) => {
-        const resultId = resultElement.getAttribute(dataResultKey);
-        if (
-          !(resultId === "areaDescription") &&
-          !(resultId === "iconURL") &&
-          !(resultId === "description") &&
-          !(resultId === "temp") &&
-          !(resultId === "temp_min") &&
-          !(resultId === "temp_max")
-        )
-          return;
+        type DataResultKeyValue =
+          | "areaDescription"
+          | "iconURL"
+          | "description"
+          | "temp"
+          | "temp_min"
+          | "temp_max";
+        const resultId = resultElement.getAttribute(
+          dataResultKey
+        ) as DataResultKeyValue;
+
         if (resultId === "iconURL") {
           if (!(resultElement instanceof HTMLImageElement)) return;
           resultElement.src = weatherData[resultId];
@@ -215,13 +224,12 @@ export const weather = async () => {
       const url = `https://getweatherinformation-afq4w33w3q-uc.a.run.app/?prefecture=${prefectureEn}`;
       const data: WeatherApiJson = await fetchData(url);
       const weatherData = formatWeatherData(data);
-      const defaultBlock = document.querySelector(
+      const defaultBlock = document.querySelector<HTMLDivElement>(
         "[data-weather-block=default]"
       );
       updateResultBlock(weatherData, dataKey);
-      if (defaultBlock instanceof HTMLDivElement) {
-        defaultBlock.hidden = true;
-      }
+      if (!defaultBlock) return;
+      defaultBlock.hidden = true;
       prefectureInputs[0].focus();
     });
   };
