@@ -18,15 +18,6 @@ export const weather = async () => {
     name: string;
   };
 
-  type WeatherData = {
-    areaDescription: string;
-    iconURL: string;
-    description: string;
-    temp: number;
-    temp_min: number;
-    temp_max: number;
-  };
-
   type areaData = { key: string; list: string[] };
   type prefectureList = { name: string; ja: string; region: string }[];
   type prefectureData = {
@@ -178,7 +169,10 @@ export const weather = async () => {
 
       return weatherData;
     };
-    const updateResultBlock = (weatherData: WeatherData, dataValue: string) => {
+    const updateResultBlock = (
+      weatherData: ReturnType<typeof formatWeatherData>,
+      dataValue: string
+    ) => {
       const weatherResultElement = document.querySelector<HTMLDivElement>(
         `[data-weather-block=${dataValue}]`
       );
