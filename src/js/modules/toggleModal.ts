@@ -1,45 +1,41 @@
 export const toggleModal = () => {
   const showModal = () => {
     const openTriggerKey = "data-modal-open";
-    const openTriggers: NodeListOf<HTMLButtonElement> =
-      document.querySelectorAll(`[${openTriggerKey}]`);
+    const openTriggers = document.querySelectorAll<HTMLButtonElement>(
+      `[${openTriggerKey}]`
+    );
 
     openTriggers.forEach((openTrigger) => {
-      const id = openTrigger.getAttribute(openTriggerKey);
-      const target = document.getElementById(id ?? "");
-      if (!(target instanceof HTMLDialogElement)) {
+      const id = openTrigger.getAttribute(openTriggerKey) ?? "";
+      const target = document.getElementById(id) as HTMLDialogElement | null;
+      if (!target) {
         openTrigger.disabled = true;
         return;
       }
 
-      openTrigger.addEventListener("click", () => {
-        target.showModal();
-      });
+      openTrigger.addEventListener("click", () => target.showModal());
     });
   };
 
   /**
    * モーダルを非表示にする
-   * @function
-   * @returns {void} 返り値なし
    */
   const closeModal = () => {
     const closeTriggerKey = "data-modal-close";
-    /** @type {NodeListOf<HTMLButtonElement>} モーダルを開くトリガー要素リスト */
-    const closeTriggers = document.querySelectorAll(`[${closeTriggerKey}]`);
+    const closeTriggers = document.querySelectorAll<HTMLButtonElement>(
+      `[${closeTriggerKey}]`
+    );
 
     closeTriggers.forEach((closeTrigger) => {
-      const id = closeTrigger.getAttribute(closeTriggerKey);
-      const target = document.getElementById(id ?? "");
-      if (!(target instanceof HTMLDialogElement)) return;
+      const id = closeTrigger.getAttribute(closeTriggerKey) ?? "";
+      const target = document.getElementById(id) as HTMLDialogElement | null;
+      if (!target) return;
 
-      closeTrigger.addEventListener("click", () => {
-        target.close();
-      });
+      closeTrigger.addEventListener("click", () => target.close());
 
       target.addEventListener("click", (event) => {
-        const clickedElement = event.target;
-        if (!(clickedElement instanceof HTMLElement)) return;
+        const clickedElement = event.target as HTMLElement | null;
+        if (!clickedElement) return;
 
         if (clickedElement === target) {
           target.close();
