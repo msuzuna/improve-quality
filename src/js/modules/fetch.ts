@@ -1,14 +1,4 @@
-/**
- * @typedef {Object} Json
- * @property {boolean} ok
- * @property {any} data
- */
-
-/**
- * fetchでデータを取得する関数
- * @param {string} url
- */
-export const fetchData = async (url) => {
+export const fetchData = async (url: string) => {
   const response = await fetch(url);
 
   if (!response.ok) {
